@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Cosmic Messenger</title>
+    <meta name="theme-color" content="#030712">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: #000;
+            color: #f3f4f6;
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            overflow-y: auto; 
+        }
+
+        .app-container {
+            width: 100%;
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            background-color: #000;
+        }
+
+        /* Сногсшибательный живой космический фон без сторонних видео и водяных знаков */
+        .bg-cosmic {
+            position: absolute;
+            top: -10%;
+            left: -10%;
+            width: 120%;
+            height: 120%;
+            background-image: url('https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?q=80&w=2000&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            z-index: 0;
+            pointer-events: none;
+            filter: brightness(1.05) contrast(1.2);
+            animation: cosmicMotion 25s ease-in-out infinite alternate;
+        }
+
+        @keyframes cosmicMotion {
+            0% {
+                transform: scale(1) translate(0, 0) rotate(0deg);
+            }
+            50% {
+                transform: scale(1.08) translate(-2%, -3%) rotate(1deg);
+            }
+            100% {
+                transform: scale(1.15) translate(2%, 3%) rotate(-1deg);
+            }
+        }
+
+        @media (min-width: 768px) {
+            .app-container {
+                max-width: 450px;
+                height: 85vh;
+                min-height: auto;
+                border-radius: 24px;
+                box-shadow: 0 0 50px rgba(168, 85, 247, 0.4), 0 25px 50px rgba(0, 0, 0, 0.95);
+                border: 1px solid rgba(168, 85, 247, 0.5);
+                overflow: hidden;
+            }
+        }
+
+        .screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: calc(100% - 65px);
+            display: none;
+            flex-direction: column;
+            background: rgba(5, 7, 15, 0.35);
+            z-index: 5;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        #authScreen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(5, 7, 15, 0.55);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 30px 24px;
+            z-index: 20;
+            text-align: center;
+            overflow-y: auto;
+        }
+
+        #authScreen h2 {
+            margin-bottom: 8px;
+            color: #d8b4fe;
+            text-shadow: 0 0 20px rgba(192, 132, 252, 0.9);
+        }
+
+        #authScreen p {
+            color: #d1d5db;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+
+        .auth-inputs {
+            width: 100%;
+            max-width: 320px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        #authScreen input {
+            width: 100%;
+            padding: 14px 18px;
+            border-radius: 14px;
+            border: 1px solid rgba(168, 85, 247, 0.6);
+            background: rgba(10, 15, 30, 0.75);
+            color: #fff;
+            font-size: 1rem;
+            outline: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        #authScreen input:focus {
+            border-color: #c084fc;
+            box-shadow: 0 0 18px rgba(192, 132, 252, 0.7);
+        }
+
+        #authScreen button {
+            width: 100%;
+            max-width: 320px;
+            padding: 14px;
+            border-radius: 14px;
+            border: none;
+            background: linear-gradient(135deg, #a855f7, #7c3aed);
+            color: #fff;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(168, 85, 247, 0.6);
+        }
+
+        .accounts-list {
+            width: 100%;
+            max-width: 320px;
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+
+        .account-card {
+            background: rgba(10, 15, 30, 0.75);
+            padding: 10px 14px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: background 0.2s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .account-card:hover {
+            background: rgba(20, 30, 50, 0.85);
+        }
+
+        .account-info {
+            text-align: left;
+        }
+
+        .account-info h4 {
+            font-size: 0.9rem;
+            color: #fff;
+        }
+
+        .account-info p {
+            font-size: 0.75rem;
+            color: #d1d5db;
+            margin: 0;
+        }
+
+        .header {
+            padding: 14px 20px;
+            background: rgba(10, 15, 30, 0.65);
+            border-bottom: 1px solid rgba(168, 85, 247, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-weight: 600;
+            flex-shrink: 0;
+            color: #d8b4fe;
+            text-shadow: 0 0 10px rgba(192, 132, 252, 0.5);
+        }
+
+        .nav-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 65px;
+            background: rgba(8, 12, 24, 0.75);
+            border-top: 1px solid rgba(168, 85, 247, 0.3);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .nav-item {
+            background: none;
+            border: none;
+            color: #9ca3af;
+            font-size: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            flex: 1;
+            transition: color 0.2s;
+        }
+
+        .nav-item.active {
+            color: #d8b4fe;
+            text-shadow: 0 0 15px rgba(216, 180, 254, 0.9);
+        }
+
+        .nav-item svg {
+            width: 22px;
+            height: 22px;
+            fill: currentColor;
+        }
+
+        .list-container {
+            flex: 1;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .list-item {
+            background: rgba(10, 15, 30, 0.65);
+            padding: 12px 16px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: background 0.2s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .list-item:hover {
+            background: rgba(20, 30, 50, 0.75);
+        }
+
+        .item-info h4 {
+            font-size: 0.95rem;
+            margin-bottom: 2px;
+            color: #fff;
+        }
+
+        .item-info p {
+            font-size: 0.8rem;
+            color: #d1d5db;
+        }
+
+        #chatRoomScreen {
+            z-index: 6;
+            background: transparent;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 16px;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background: rgba(5, 7, 15, 0.1);
+        }
+
+        .msg-bubble {
+            max-width: 75%;
+            padding: 10px 14px;
+            border-radius: 14px;
+            font-size: 0.95rem;
+            word-break: break-word;
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            color: #fff;
+        }
+
+        .msg-bubble.outgoing {
+            background: linear-gradient(135deg, #a855f7, #7c3aed);
+            color: #fff;
+            align-self: flex-end;
+            border: none;
+            box-shadow: 0 4px 15px rgba(168, 85, 247, 0.5);
+            border-bottom-left-radius: 14px;
+            border-bottom-right-radius: 4px;
+        }
+
+        .msg-sender {
+            font-size: 0.7rem;
+            color: #d8b4fe;
+            margin-bottom: 2px;
+            font-weight: bold;
+        }
+
+        .chat-input-panel {
+            padding: 10px 14px;
+            background: rgba(8, 12, 24, 0.75);
+            border-top: 1px solid rgba(168, 85, 247, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .chat-input-panel input {
+            flex: 1;
+            padding: 10px 16px;
+            border-radius: 20px;
+            border: 1px solid rgba(168, 85, 247, 0.5);
+            background: rgba(10, 15, 30, 0.8);
+            color: #fff;
+            outline: none;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            color: #d8b4fe;
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 4px;
+        }
+
+        .settings-content {
+            flex: 1;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .settings-card {
+            background: rgba(10, 15, 30, 0.65);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 16px;
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .settings-card label {
+            font-size: 0.85rem;
+            color: #d1d5db;
+        }
+
+        .modal {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.65);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 30;
+        }
+        .modal-box {
+            background: rgba(10, 15, 30, 0.92);
+            border: 1px solid rgba(168, 85, 247, 0.6);
+            padding: 24px;
+            border-radius: 20px;
+            width: 85%;
+            max-width: 320px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- ЖИВОЙ КОСМИЧЕСКИЙ ФОН -->
+        <div class="bg-cosmic"></div>
+        
+        <!-- ЭКРАН АВТОРИЗАЦИИ -->
+        <div id="authScreen">
+            <h2>Cosmic Messenger</h2>
+            <p>Защищенный доступ с динамическим фоном</p>
+            <div class="auth-inputs">
+                <input type="text" id="regName" placeholder="Ваше имя..." autocomplete="off">
+                <input type="text" id="regUsername" placeholder="Юзернейм (например, @alex)" autocomplete="off">
+                <input type="text" id="regPhone" placeholder="Любой номер или текст (необязательно)" autocomplete="off">
+                <input type="password" id="regPassword" placeholder="Секретный пин-код/пароль" autocomplete="new-password">
+            </div>
+            <button id="registerBtn" type="button">Создать и войти</button>
+            
+            <div id="savedAccountsSection" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+                <p style="margin: 16px 0 6px 0; font-size: 0.8rem; color: #d1d5db;">Ваши сохраненные профили:</p>
+                <div class="accounts-list" id="accountsListContainer"></div>
+            </div>
+        </div>
+
+        <!-- ВКЛАДКА 1: ЧАТЫ -->
+        <div id="chatsScreen" class="screen active">
+            <div class="header">
+                <span>Чаты</span>
+                <button class="action-btn" id="openGroupModalBtn" title="Создать группу">➕</button>
+            </div>
+            <div class="list-container" id="chatsList">
+                <div class="list-item" style="cursor: default; background: transparent; border: none; justify-content: center; color: #d1d5db; text-align: center; box-shadow: none;">
+                    Список чатов пуст. Воспользуйтесь поиском.
+                </div>
+            </div>
+        </div>
+
+        <!-- ВКЛАДКА 2: ПОИСК -->
+        <div id="searchScreen" class="screen">
+            <div class="header">
+                <span>Поиск людей</span>
+            </div>
+            <div style="padding: 12px; flex-shrink: 0;">
+                <input type="text" id="searchInput" placeholder="Введите имя или @username..." style="width:100%; padding: 12px; border-radius: 12px; border: 1px solid rgba(168,85,247,0.5); background: rgba(10,15,30,0.8); color:#fff; outline:none; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
+            </div>
+            <div class="list-container" id="searchResults"></div>
+        </div>
+
+        <!-- ВКЛАДКА 3: ПРОФИЛЬ -->
+        <div id="profileScreen" class="screen">
+            <div class="header">
+                <span>Мой профиль</span>
+            </div>
+            <div class="settings-content">
+                <div class="settings-card">
+                    <label>Ваше имя</label>
+                    <input type="text" id="editName" style="padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.25); background: rgba(10,15,30,0.8); color:#fff;">
+                </div>
+                <div class="settings-card">
+                    <label>Юзернейм</label>
+                    <input type="text" id="editUsername" readonly style="padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(5,7,15,0.5); color:#9ca3af;">
+                </div>
+                <div class="settings-card">
+                    <label>Номер / Значение</label>
+                    <input type="text" id="editPhone" readonly style="padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(5,7,15,0.5); color:#9ca3af;">
+                </div>
+                <button id="saveProfileBtn" style="padding: 12px; background: linear-gradient(135deg, #a855f7, #7c3aed); border:none; border-radius: 10px; color:#fff; font-weight:bold; cursor:pointer; box-shadow: 0 4px 15px rgba(168,85,247,0.4);">Сохранить</button>
+                <button id="switchAccountBtn" style="padding: 12px; background: rgba(20, 30, 50, 0.85); border:1px solid rgba(255,255,255,0.25); border-radius: 10px; color:#fff; font-weight:bold; cursor:pointer; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">Сменить аккаунт</button>
+            </div>
+        </div>
+
+        <!-- ЭКРАН ЧАТА -->
+        <div id="chatRoomScreen" class="screen">
+            <div class="header">
+                <button class="action-btn" id="closeChatBtn">⬅</button>
+                <span id="activeChatTitle" style="color: #d8b4fe; text-shadow: 0 0 10px rgba(216,180,254,0.8);">Чат</span>
+                <span></span>
+            </div>
+            <div class="chat-messages" id="chatMessages"></div>
+            <div class="chat-input-panel">
+                <input type="text" id="msgInput" placeholder="Сообщение..." autocomplete="off">
+                <button class="action-btn" id="sendMsgBtn">➤</button>
+            </div>
+        </div>
+
+        <!-- НАВИГАЦИЯ -->
+        <div class="nav-bar">
+            <button class="nav-item active" data-target="chatsScreen">
+                <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+                Чаты
+            </button>
+            <button class="nav-item" data-target="searchScreen">
+                <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                Поиск
+            </button>
+            <button class="nav-item" data-target="profileScreen">
+                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
+                Профиль
+            </button>
+        </div>
+
+        <!-- МОДАЛКА СОЗДАНИЯ ГРУППЫ -->
+        <div class="modal" id="groupModal">
+            <div class="modal-box">
+                <h3 style="color: #d8b4fe;">Создать группу</h3>
+                <input type="text" id="groupNameInput" placeholder="Название группы..." style="padding: 10px; border-radius: 8px; border: 1px solid rgba(168,85,247,0.5); background: rgba(10,15,30,0.9); color:#fff; outline:none;">
+                <button id="createGroupConfirmBtn" style="padding: 10px; background: linear-gradient(135deg, #a855f7, #7c3aed); border:none; border-radius: 8px; color:#fff; font-weight:bold; cursor:pointer; box-shadow: 0 4px 12px rgba(168,85,247,0.4);">Создать</button>
+                <button id="closeGroupModalBtn" style="padding: 10px; background: none; border:none; color:#d1d5db; cursor:pointer;">Отмена</button>
+            </div>
+        </div>
+
+        <!-- МОДАЛКА ПРОВЕРКИ ПАРОЛЯ ДЛЯ ВХОДА -->
+        <div class="modal" id="passwordModal">
+            <div class="modal-box">
+                <h3 style="color: #d8b4fe;">Защита аккаунта</h3>
+                <p style="font-size: 0.85rem; color: #d1d5db;" id="passwordPromptText">Введите пароль для профиля</p>
+                <input type="password" id="loginPasswordInput" placeholder="Ваш пароль..." style="padding: 10px; border-radius: 8px; border: 1px solid rgba(168,85,247,0.5); background: rgba(10,15,30,0.9); color:#fff; outline:none;">
+                <button id="confirmLoginBtn" style="padding: 10px; background: linear-gradient(135deg, #a855f7, #7c3aed); border:none; border-radius: 8px; color:#fff; font-weight:bold; cursor:pointer; box-shadow: 0 4px 12px rgba(168,85,247,0.4);">Войти</button>
+                <button id="cancelLoginBtn" style="padding: 10px; background: none; border:none; color:#d1d5db; cursor:pointer;">Отмена</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        let myName = localStorage.getItem('g_current_name');
+        let myUsername = localStorage.getItem('g_current_username');
+        let myPhone = localStorage.getItem('g_current_phone');
+        let currentChatId = null;
+
+        const authScreen = document.getElementById('authScreen');
+
+        if (myName && myUsername) {
+            authScreen.style.display = 'none';
+        } else {
+            authScreen.style.display = 'flex';
+            renderSavedAccounts();
+        }
+
+        function renderSavedAccounts() {
+            const container = document.getElementById('accountsListContainer');
+            const section = document.getElementById('savedAccountsSection');
+            container.innerHTML = '';
+
+            let profiles = JSON.parse(localStorage.getItem('g_saved_profiles') || '[]');
+            if (profiles.length === 0) {
+                section.style.display = 'none';
+                return;
+            }
+            section.style.display = 'flex';
+
+            profiles.forEach(acc => {
+                const card = document.createElement('div');
+                card.classList.add('account-card');
+                card.innerHTML = `
+                    <div class="account-info">
+                        <h4>🔒 ${acc.name} (${acc.username})</h4>
+                        <p>${acc.phone || 'Без номера'}</p>
+                    </div>
+                    <span style="color: #d8b4fe; font-size: 1.2rem;">➜</span>
+                `;
+                card.onclick = () => {
+                    openPasswordCheckModal(acc);
+                };
+                container.appendChild(card);
+            });
+        }
+
+        function openPasswordCheckModal(acc) {
+            const modal = document.getElementById('passwordModal');
+            const input = document.getElementById('loginPasswordInput');
+            const promptText = document.getElementById('passwordPromptText');
+            
+            input.value = '';
+            promptText.textContent = `Введите пароль для профиля ${acc.username}`;
+            modal.style.display = 'flex';
+            input.focus();
+
+            document.getElementById('confirmLoginBtn').onclick = function() {
+                if (input.value === acc.password) {
+                    localStorage.setItem('g_current_name', acc.name);
+                    localStorage.setItem('g_current_username', acc.username);
+                    localStorage.setItem('g_current_phone', acc.phone || '');
+                    modal.style.display = 'none';
+                    location.reload();
+                } else {
+                    alert('Неверный пароль!');
+                }
+            };
+
+            document.getElementById('cancelLoginBtn').onclick = function() {
+                modal.style.display = 'none';
+            };
+        }
+
+        document.getElementById('registerBtn').onclick = function() {
+            const name = document.getElementById('regName').value.trim();
+            let uname = document.getElementById('regUsername').value.trim();
+            const phone = document.getElementById('regPhone').value.trim();
+            const password = document.getElementById('regPassword').value.trim();
+            
+            if (!name || !uname || !password) {
+                alert('Заполните обязательные поля (Имя, Юзернейм и Пароль)!');
+                return;
+            }
+
+            if (!uname.startsWith('@')) uname = '@' + uname;
+
+            localStorage.setItem('g_current_name', name);
+            localStorage.setItem('g_current_username', uname);
+            localStorage.setItem('g_current_phone', phone);
+            
+            let profiles = JSON.parse(localStorage.getItem('g_saved_profiles') || '[]');
+            const existingIndex = profiles.findIndex(p => p.username === uname);
+            if (existingIndex !== -1) {
+                profiles[existingIndex] = { name, username: uname, phone, password };
+            } else {
+                profiles.push({ name, username: uname, phone, password });
+            }
+            localStorage.setItem('g_saved_profiles', JSON.stringify(profiles));
+
+            let users = JSON.parse(localStorage.getItem('g_all_users') || '[]');
+            if (!users.some(u => u.username === uname)) {
+                users.push({ name: name, username: uname, phone: phone });
+                localStorage.setItem('g_all_users', JSON.stringify(users));
+            }
+
+            location.reload();
+        };
+
+        document.getElementById('switchAccountBtn').addEventListener('click', () => {
+            localStorage.removeItem('g_current_name');
+            localStorage.removeItem('g_current_username');
+            localStorage.removeItem('g_current_phone');
+            location.reload();
+        });
+
+        document.querySelectorAll('.nav-item').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+                
+                btn.classList.add('active');
+                const target = btn.getAttribute('data-target');
+                document.getElementById(target).classList.add('active');
+
+                if (target === 'profileScreen') {
+                    document.getElementById('editName').value = myName || '';
+                    document.getElementById('editUsername').value = myUsername || '';
+                    document.getElementById('editPhone').value = myPhone || '';
+                }
+            });
+        });
+
+        document.getElementById('saveProfileBtn').addEventListener('click', () => {
+            const newName = document.getElementById('editName').value.trim();
+            if (!newName) return;
+            localStorage.setItem('g_current_name', newName);
+            myName = newName;
+            
+            let profiles = JSON.parse(localStorage.getItem('g_saved_profiles') || '[]');
+            profiles = profiles.map(p => {
+                if (p.username === myUsername) p.name = newName;
+                return p;
+            });
+            localStorage.setItem('g_saved_profiles', JSON.stringify(profiles));
+
+            alert('Сохранено!');
+        });
+
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const query = e.target.value.trim().toLowerCase();
+            const resultsBox = document.getElementById('searchResults');
+            resultsBox.innerHTML = '';
+            if (!query) return;
+
+            let users = JSON.parse(localStorage.getItem('g_all_users') || '[]');
+            if (users.length === 0) {
+                users = [
+                    { name: 'Алексей', username: '@alex', phone: '12345' },
+                    { name: 'Елена', username: '@elena', phone: 'тест' }
+                ];
+            }
+
+            const filtered = users.filter(user => 
+                (user.username.toLowerCase().includes(query) || user.name.toLowerCase().includes(query)) && 
+                user.username !== myUsername
+            );
+
+            if (filtered.length === 0) {
+                resultsBox.innerHTML = '<div style="padding: 15px; color: #d1d5db; text-align: center;">Ничего не найдено</div>';
+                return;
+            }
+
+            filtered.forEach(user => {
+                const div = document.createElement('div');
+                div.classList.add('list-item');
+                div.innerHTML = `<div class="item-info"><h4>${user.name} (${user.phone || 'без номера'})</h4><p>${user.username}</p></div>`;
+                div.addEventListener('click', () => openPersonalChat(user));
+                resultsBox.appendChild(div);
+            });
+        });
+
+        function openPersonalChat(user) {
+            const sorted = [myUsername, user.username].sort();
+            currentChatId = 'chat_' + sorted[0].replace('@','') + '_' + sorted[1].replace('@','');
+            document.getElementById('activeChatTitle').textContent = user.name;
+            
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById('chatRoomScreen').classList.add('active');
+            loadMessages();
+        }
+
+        document.getElementById('sendMsgBtn').addEventListener('click', sendMessage);
+        document.getElementById('msgInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+
+        function sendMessage() {
+            const text = document.getElementById('msgInput').value.trim();
+            if (!text || !currentChatId) return;
+
+            let messages = JSON.parse(localStorage.getItem(currentChatId) || '[]');
+            messages.push({ sender: myName, username: myUsername, text: text });
+            localStorage.setItem(currentChatId, JSON.stringify(messages));
+            document.getElementById('msgInput').value = '';
+            loadMessages();
+        }
+
+        function loadMessages() {
+            const box = document.getElementById('chatMessages');
+            box.innerHTML = '';
+            let messages = JSON.parse(localStorage.getItem(currentChatId) || '[]');
+            
+            if (messages.length === 0) {
+                box.innerHTML = '<div style="color: #d1d5db; text-align: center; margin-top: 20px;">Напишите первое сообщение...</div>';
+                return;
+            }
+
+            messages.forEach(msg => {
+                const div = document.createElement('div');
+                div.classList.add('msg-bubble');
+                if (msg.username === myUsername) div.classList.add('outgoing');
+                
+                div.innerHTML = `<div class="msg-sender">${msg.sender}</div><div>${msg.text}</div>`;
+                box.appendChild(div);
+            });
+            box.scrollTop = box.scrollHeight;
+        }
+
+        document.getElementById('closeChatBtn').addEventListener('click', () => {
+            document.getElementById('chatRoomScreen').classList.remove('active');
+            document.getElementById('chatsScreen').classList.add('active');
+        });
+
+        const groupModal = document.getElementById('groupModal');
+        document.getElementById('openGroupModalBtn').addEventListener('click', () => groupModal.style.display = 'flex');
+        document.getElementById('closeGroupModalBtn').addEventListener('click', () => groupModal.style.display = 'none');
+        document.getElementById('createGroupConfirmBtn').addEventListener('click', () => {
+            const gName = document.getElementById('groupNameInput').value.trim();
+            if (!gName) return;
+            groupModal.style.display = 'none';
+            document.getElementById('groupNameInput').value = '';
+            alert('Группа "' + gName + '" создана!');
+        });
+    </script>
+</body>
+</html>
