@@ -300,7 +300,7 @@
             border-top: 1px solid rgba(168, 85, 247, 0.3);
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             flex-shrink: 0;
         }
 
@@ -435,7 +435,8 @@
             </div>
             <div class="chat-messages" id="chatMessages"></div>
             <div class="chat-input-panel">
-                <button class="action-btn" id="mediaBtn" title="Записать кружок или голосовое">⏺</button>
+                <button class="action-btn" id="voiceBtn" title="Записать голосовое сообщение">🎤</button>
+                <button class="action-btn" id="videoBtn" title="Записать видео-кружок">📹</button>
                 <input type="text" id="msgInput" placeholder="Сообщение..." autocomplete="off">
                 <button class="action-btn" id="sendMsgBtn" title="Отправить">➤</button>
             </div>
@@ -478,14 +479,14 @@
             </div>
         </div>
 
-        <!-- МОДАЛКА МЕДИА -->
+        <!-- МОДАЛКА МЕДИА (С УВЕЛИЧЕННЫМ КРУЖКОМ 200x200px) -->
         <div class="modal" id="mediaModal">
             <div class="modal-box">
-                <h3 style="color: #d8b4fe;">Запись кружка / голосового</h3>
-                <div id="mediaPreviewContainer" style="display:flex; justify-content:center; align-items:center; margin: 10px 0;">
-                    <video id="mediaPreviewVideo" autoplay muted playsinline style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 2px solid #d8b4fe; display:none;"></video>
+                <h3 id="mediaModalTitle" style="color: #d8b4fe;">Запись</h3>
+                <div id="mediaPreviewContainer" style="display:flex; justify-content:center; align-items:center; margin: 15px 0;">
+                    <video id="mediaPreviewVideo" autoplay muted playsinline style="width: 200px; height: 200px; border-radius: 50%; object-fit: cover; border: 3px solid #d8b4fe; display:none; box-shadow: 0 0 25px rgba(168,85,247,0.6);"></video>
                 </div>
-                <p id="recordingTimer" style="font-size: 1.1rem; color: #f87171; font-weight: bold;">00:00</p>
+                <p id="recordingTimer" style="font-size: 1.2rem; color: #f87171; font-weight: bold;">00:00</p>
                 <button id="stopAndSendMediaBtn" style="background: #ef4444; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.6);">Остановить и отправить</button>
                 <button id="cancelMediaBtn" style="background:none; box-shadow:none; color:#d1d5db;">Отмена</button>
             </div>
@@ -498,13 +499,13 @@
 
     <script>
         const firebaseConfig = {
-            apiKey: "AIzaSyD076TRQB2Rg1HBGyykB...",
+            apiKey: "AIzaSyD076TRQB2Rg1HBGyykBVXRvn7Vw2N8zbY",
             authDomain: "geminichat-58c72.firebaseapp.com",
             databaseURL: "https://geminichat-58c72-default-rtdb.firebaseio.com",
             projectId: "geminichat-58c72",
-            storageBucket: "geminichat-58c72.appspot.com",
+            storageBucket: "geminichat-58c72.firebasestorage.app",
             messagingSenderId: "815197982634",
-            appId: "1:815197982634:web:3b9c01f8...",
+            appId: "1:815197982634:web:3b9c01f83675f74e46e5d3",
             measurementId: "G-845NCYG8CL"
         };
 
@@ -517,6 +518,11 @@
         let currentChatId = null;
         let messageListener = null;
         let userChatsListener = null;
+
+        // Запрос разрешений на браузерные уведомления
+        if (window.Notification && Notification.permission !== "granted") {
+            Notification.requestPermission();
+        }
 
         function cleanKey(str) {
             if (!str) return 'unknown';
@@ -652,7 +658,6 @@
             alert('Профиль сохранен!');
         });
 
-        // НАДЕЖНЫЙ ПОИСК С ЗАЩИТОЙ ОТ UNDEFINED
         document.getElementById('searchInput').addEventListener('input', (e) => {
             const query = e.target.value.trim().toLowerCase();
             const resultsBox = document.getElementById('searchResults');
@@ -799,12 +804,25 @@
             textInput.value = '';
         }
 
-        // КРУЖКИ И ГОЛОСОВЫЕ
+        // ЛОГИКА ЗАПИСИ ГОЛОСОВЫХ И ВИДЕО-КРУЖКОВ
         let mediaStream = null;
         let mediaTimerInterval = null;
         let secondsElapsed = 0;
+        let currentMediaType = 'voice';
 
-        document.getElementById('mediaBtn').addEventListener('click', async () => {
+        document.getElementById('voiceBtn').addEventListener('click', async () => {
+            currentMediaType = 'voice';
+            document.getElementById('mediaModalTitle').textContent = 'Запись голосового';
+            openMediaModal(false);
+        });
+
+        document.getElementById('videoBtn').addEventListener('click', async () => {
+            currentMediaType = 'video';
+            document.getElementById('mediaModalTitle').textContent = 'Запись видео-кружка';
+            openMediaModal(true);
+        });
+
+        async function openMediaModal(withVideo) {
             const modal = document.getElementById('mediaModal');
             const videoElem = document.getElementById('mediaPreviewVideo');
             const timerElem = document.getElementById('recordingTimer');
@@ -814,16 +832,19 @@
             timerElem.textContent = "00:00";
 
             try {
-                mediaStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-                videoElem.srcObject = mediaStream;
-                videoElem.style.display = 'block';
-            } catch (err) {
-                try {
-                    mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                    videoElem.style.display = 'none';
-                } catch (e) {
+                const constraints = withVideo ? { video: true, audio: true } : { audio: true };
+                mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
+                
+                if (withVideo) {
+                    videoElem.srcObject = mediaStream;
+                    videoElem.style.display = 'block';
+                } else {
                     videoElem.style.display = 'none';
                 }
+            } catch (err) {
+                alert('Не удалось получить доступ к микрофону/камере!');
+                modal.style.display = 'none';
+                return;
             }
 
             mediaTimerInterval = setInterval(() => {
@@ -832,7 +853,7 @@
                 let secs = (secondsElapsed % 60).toString().padStart(2, '0');
                 timerElem.textContent = `${mins}:${secs}`;
             }, 1000);
-        });
+        }
 
         document.getElementById('stopAndSendMediaBtn').onclick = function() {
             clearInterval(mediaTimerInterval);
@@ -841,11 +862,15 @@
             }
             document.getElementById('mediaModal').style.display = 'none';
 
+            let msgText = currentMediaType === 'video' 
+                ? `📹 Видео-кружок (${secondsElapsed} сек)` 
+                : `🎤 Голосовое сообщение (${secondsElapsed} сек)`;
+
             const messageData = {
                 sender: myName,
                 username: myUsername,
-                text: `🎤 Голосовое сообщение / Кружок (${secondsElapsed} сек)`,
-                type: 'audio',
+                text: msgText,
+                type: currentMediaType,
                 timestamp: Date.now()
             };
             db.ref('chats/' + currentChatId + '/messages').push(messageData);
@@ -859,6 +884,7 @@
             document.getElementById('mediaModal').style.display = 'none';
         };
 
+        // ЗАГРУЗКА СООБЩЕНИЙ И УВЕДОМЛЕНИЯ
         function loadMessages() {
             const box = document.getElementById('chatMessages');
             box.innerHTML = '';
@@ -867,16 +893,31 @@
                 db.ref('chats/' + currentChatId + '/messages').off('value', messageListener);
             }
 
+            let isFirstLoad = true;
+
             messageListener = db.ref('chats/' + currentChatId + '/messages').on('value', (snapshot) => {
                 box.innerHTML = '';
                 const data = snapshot.val();
 
                 if (!data) {
                     box.innerHTML = '<div style="color: gray; text-align: center; margin-top: 20px;">Нет сообщений. Напишите первыми!</div>';
+                    isFirstLoad = false;
                     return;
                 }
 
-                Object.values(data).forEach(msg => {
+                const messagesArray = Object.values(data);
+                const lastMsg = messagesArray[messagesArray.length - 1];
+
+                if (!isFirstLoad && lastMsg && lastMsg.username !== myUsername) {
+                    if (window.Notification && Notification.permission === "granted") {
+                        new Notification(`Новое сообщение от ${lastMsg.sender}`, {
+                            body: lastMsg.text,
+                            icon: 'https://cdn-icons-png.flaticon.com/512/733/733585.png'
+                        });
+                    }
+                }
+
+                messagesArray.forEach(msg => {
                     const div = document.createElement('div');
                     div.classList.add('msg-bubble');
                     
@@ -889,6 +930,7 @@
                 });
 
                 box.scrollTop = box.scrollHeight;
+                isFirstLoad = false;
             });
         }
 
@@ -928,15 +970,3 @@
     </script>
 </body>
 </html>
-<script>
-  const firebaseConfig = {
-    apiKey: "AIzaSyD076TRQB2Rg1HBGyykBVXRvn7Vw2N8zbY",
-    authDomain: "geminichat-58c72.firebaseapp.com",
-    databaseURL: "https://geminichat-58c72-default-rtdb.firebaseio.com",
-    projectId: "geminichat-58c72",
-    storageBucket: "geminichat-58c72.firebasestorage.app",
-    messagingSenderId: "815197982634",
-    appId: "1:815197982634:web:3b9c01f83675f74e46e5d3",
-    measurementId: "G-845NCYG8CL"
-  };
-</script>
