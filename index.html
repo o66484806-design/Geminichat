@@ -396,7 +396,7 @@
             </div>
         </div>
 
-        <!-- ВКЛАДКА 2: ПОИСК (Имя, юзернейм, телефон) -->
+        <!-- ВКЛАДКА 2: ПОИСК -->
         <div id="searchScreen" class="screen">
             <div class="header"><span>Поиск людей и групп</span></div>
             <div style="padding: 12px; flex-shrink: 0;">
@@ -457,7 +457,7 @@
             </button>
         </div>
 
-        <!-- МОДАЛКА СОЗДАНИЯ ГРУППЫ -->
+        <!-- МОДАЛКА ГРУППЫ -->
         <div class="modal" id="groupModal">
             <div class="modal-box">
                 <h3 style="color: #d8b4fe;">Создать группу</h3>
@@ -478,7 +478,7 @@
             </div>
         </div>
 
-        <!-- МОДАЛКА ЗАПИСИ КРУЖКА / ГОЛОСОВОГО -->
+        <!-- МОДАЛКА МЕДИА -->
         <div class="modal" id="mediaModal">
             <div class="modal-box">
                 <h3 style="color: #d8b4fe;">Запись кружка / голосового</h3>
@@ -518,12 +518,16 @@
         let messageListener = null;
         let userChatsListener = null;
 
+        function cleanKey(str) {
+            if (!str) return 'unknown';
+            return str.replace(/[@.#$\/\[\]]/g, '_').toLowerCase();
+        }
+
         const authScreen = document.getElementById('authScreen');
 
         if (myName && myUsername) {
             authScreen.style.display = 'none';
-            // Гарантируем регистрацию юзера в базе при старте
-            db.ref('users/' + myUsername.replace(/[@.]/g, '_')).set({
+            db.ref('users/' + cleanKey(myUsername)).set({
                 name: myName,
                 username: myUsername,
                 phone: myPhone || ''
@@ -608,7 +612,7 @@
             else profiles.push({ name, username: uname, phone, password });
             localStorage.setItem('g_saved_profiles', JSON.stringify(profiles));
 
-            db.ref('users/' + uname.replace(/[@.]/g, '_')).set({ name, username: uname, phone });
+            db.ref('users/' + cleanKey(uname)).set({ name, username: uname, phone });
 
             location.reload();
         });
@@ -644,11 +648,11 @@
             if (!newName) return;
             localStorage.setItem('g_current_name', newName);
             myName = newName;
-            db.ref('users/' + myUsername.replace(/[@.]/g, '_')).update({ name: newName });
+            db.ref('users/' + cleanKey(myUsername)).update({ name: newName });
             alert('Профиль сохранен!');
         });
 
-        // ПОИСК ПО ИМЕНИ, ЮЗЕРНЕЙМУ И НОМЕРУ ТЕЛЕФОНА
+        // НАДЕЖНЫЙ ПОИСК
         document.getElementById('searchInput').addEventListener('input', (e) => {
             const query = e.target.value.trim().toLowerCase();
             const resultsBox = document.getElementById('searchResults');
@@ -663,7 +667,7 @@
                     let found = false;
 
                     Object.values(users).forEach(user => {
-                        if (user.username === myUsername) return;
+                        if (!user.username || user.username === myUsername) return;
                         const matchName = user.name && user.name.toLowerCase().includes(query);
                         const matchUname = user.username && user.username.toLowerCase().includes(query);
                         const matchPhone = user.phone && user.phone.toLowerCase().includes(query);
@@ -699,12 +703,11 @@
 
         function openPersonalChat(user) {
             const sorted = [myUsername, user.username].sort();
-            currentChatId = 'chat_' + sorted[0].replace(/[@.]/g, '_') + '_' + sorted[1].replace(/[@.]/g, '_');
+            currentChatId = 'chat_' + cleanKey(sorted[0]) + '_' + cleanKey(sorted[1]);
             
-            const myKey = myUsername.replace(/[@.]/g, '_');
-            const targetKey = user.username.replace(/[@.]/g, '_');
+            const myKey = cleanKey(myUsername);
+            const targetKey = cleanKey(user.username);
 
-            // Записываем чат обоим пользователям с правильными именами собеседников
             db.ref(`user_chats/${myKey}/${currentChatId}`).set({
                 title: user.name,
                 type: 'private',
@@ -724,7 +727,7 @@
 
         function joinGroupChat(gId, gName) {
             currentChatId = gId;
-            db.ref(`user_chats/${myUsername.replace(/[@.]/g, '_')}/${gId}`).set({
+            db.ref(`user_chats/${cleanKey(myUsername)}/${gId}`).set({
                 title: 'Группа: ' + gName,
                 type: 'group',
                 id: gId
@@ -741,7 +744,7 @@
 
         function loadUserChats() {
             const chatsList = document.getElementById('chatsList');
-            const userKey = myUsername.replace(/[@.]/g, '_');
+            const userKey = cleanKey(myUsername);
 
             if (userChatsListener) {
                 db.ref(`user_chats/${userKey}`).off('value', userChatsListener);
@@ -790,7 +793,7 @@
             textInput.value = '';
         }
 
-        // КРУЖКИ И ГОЛОСОВЫЕ СООБЩЕНИЯ
+        // КРУЖКИ И ГОЛОСОВЫЕ
         let mediaStream = null;
         let mediaTimerInterval = null;
         let secondsElapsed = 0;
@@ -902,7 +905,7 @@
             const gId = 'group_' + Date.now();
             db.ref('groups/' + gId).set({ name: gName, creator: myUsername });
             
-            db.ref(`user_chats/${myUsername.replace(/[@.]/g, '_')}/${gId}`).set({
+            db.ref(`user_chats/${cleanKey(myUsername)}/${gId}`).set({
                 title: 'Группа: ' + gName,
                 type: 'group',
                 id: gId
