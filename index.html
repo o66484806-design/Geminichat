@@ -268,115 +268,130 @@
             border-bottom-right-radius: 4px;
         }
 
-        /* Видео-кружки (Стиль Telegram) */
-        .video-circle-container {
+        /* ТОЧНЫЙ СТИЛЬ TELEGRAM ДЛЯ ВИДЕО-КРУЖКА */
+        .video-circle-wrapper {
             display: flex;
             flex-direction: column;
-            align-items: flex-start;
-            align-self: flex-start;
-            gap: 4px;
-            max-width: 75%;
-        }
-        .video-circle-container.outgoing {
             align-self: flex-end;
             align-items: flex-end;
+            max-width: 75%;
+            margin: 4px 0;
         }
 
-        .video-circle-msg {
-            width: 130px;
-            height: 130px;
+        .video-circle-box {
+            width: 220px;
+            height: 220px;
             border-radius: 50%;
             overflow: hidden;
             border: 3px solid #c084fc;
-            box-shadow: 0 4px 15px rgba(168, 85, 247, 0.5);
+            box-shadow: 0 4px 20px rgba(168, 85, 247, 0.5);
             background: #000;
             position: relative;
             cursor: pointer;
         }
-        .video-circle-msg video {
+
+        .video-circle-box video {
             width: 100%;
             height: 100%;
             object-fit: cover;
             pointer-events: none;
         }
-        .video-play-badge {
+
+        .video-circle-overlay {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.3);
+            background: rgba(0,0,0,0.25);
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 1.8rem;
-            color: #fff;
-            opacity: 0.8;
-            transition: opacity 0.2s;
         }
-        .video-circle-msg:hover .video-play-badge { opacity: 1; }
 
-        /* Кастомное голосовое сообщение в стиле Telegram */
-        .voice-bubble {
+        /* Плашка снизу кружка (таймер слева, значок звука посередине, время и галочки справа) */
+        .video-circle-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 220px;
+            padding: 4px 12px;
+            margin-top: 4px;
+            font-size: 0.75rem;
+            color: #d8b4fe;
+        }
+
+        .video-meta-right {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* ТОЧНЫЙ СТИЛЬ TELEGRAM ДЛЯ ГОЛОСОВОГО СООБЩЕНИЯ */
+        .voice-msg-capsule {
             display: flex;
             align-items: center;
             gap: 12px;
-            background: rgba(46, 16, 101, 0.7);
-            border: 1px solid rgba(168, 85, 247, 0.4);
+            background: linear-gradient(135deg, #9333ea, #6b21a8);
+            border: 1px solid rgba(216, 180, 254, 0.4);
             padding: 10px 16px;
             border-radius: 18px;
-            max-width: 80%;
-            align-self: flex-start;
-            border-bottom-left-radius: 4px;
-        }
-        .voice-bubble.outgoing {
-            align-self: flex-end;
-            background: linear-gradient(135deg, #9333ea, #6b21a8);
-            border-bottom-left-radius: 18px;
             border-bottom-right-radius: 4px;
+            max-width: 82%;
+            align-self: flex-end;
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(147, 51, 234, 0.3);
         }
 
         .voice-play-btn {
-            width: 36px;
-            height: 36px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
-            background: #c084fc;
+            background: #fff;
             border: none;
-            color: #0d0221;
-            font-size: 1rem;
+            color: #7e22ce;
+            font-size: 1.1rem;
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
             flex-shrink: 0;
-            box-shadow: 0 2px 8px rgba(192, 132, 252, 0.5);
-        }
-        .voice-bubble.outgoing .voice-play-btn {
-            background: #fff;
-            color: #7e22ce;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
         }
 
-        .voice-waves {
+        .voice-info-col {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            min-width: 140px;
+        }
+
+        .voice-waves-row {
             display: flex;
             align-items: center;
             gap: 3px;
             height: 20px;
         }
-        .voice-wave-bar {
+
+        .voice-wave-line {
             width: 3px;
-            background: rgba(216, 180, 254, 0.5);
+            background: rgba(255, 255, 255, 0.7);
             border-radius: 2px;
-            height: 10px;
-        }
-        .voice-bubble.outgoing .voice-wave-bar {
-            background: rgba(255, 255, 255, 0.6);
         }
 
-        /* ПАНЕЛЬ ВВОДА */
+        .voice-footer-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        /* ПАНЕЛЬ ВВОДА КАК НА СКРИНШОТЕ (СКРЕПКА СЛЕВА, МИКРОФОН СПРАВА) */
         .chat-input-panel {
             padding: 10px 14px;
-            background: rgba(23, 3, 56, 0.9);
+            background: rgba(23, 3, 56, 0.95);
             border-top: 1px solid rgba(168, 85, 247, 0.3);
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             flex-shrink: 0;
         }
 
@@ -384,7 +399,7 @@
             flex: 1;
             padding: 12px 18px;
             border-radius: 22px;
-            border: 1px solid rgba(168, 85, 247, 0.5);
+            border: 1px solid rgba(168, 85, 247, 0.4);
             background: rgba(76, 29, 149, 0.25);
             color: #fff;
             font-size: 0.95rem;
@@ -395,8 +410,21 @@
             opacity: 0.7;
         }
 
-        /* Полностью закрашенные фиолетовые кнопки записи и отправки */
-        .purple-btn {
+        /* Кнопка скрепки (прикрепление/видео-кружок) слева и микрофон (голосовое) справа */
+        .input-icon-btn {
+            background: none;
+            border: none;
+            color: #e879f9;
+            cursor: pointer;
+            font-size: 1.3rem;
+            padding: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Полностью фиолетовая кнопка отправки */
+        .purple-send-btn {
             background: linear-gradient(135deg, #a855f7, #6b21a8);
             border: none;
             color: #fff;
@@ -410,9 +438,6 @@
             box-shadow: 0 4px 12px rgba(168, 85, 247, 0.5);
             font-size: 1.1rem;
             flex-shrink: 0;
-        }
-        .purple-btn:active {
-            transform: scale(0.92);
         }
 
         .action-btn {
@@ -469,7 +494,7 @@
             box-shadow: 0 0 30px rgba(168, 85, 247, 0.3);
         }
 
-        /* Модальное окно просмотра видео-кружка во весь экран */
+        /* Полноэкранный плеер кружка */
         #videoPlayerModal {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -566,12 +591,12 @@
             </div>
             <div class="chat-messages" id="chatMessages"></div>
             
-            <!-- ПАНЕЛЬ ВВОДА -->
+            <!-- ПАНЕЛЬ ВВОДА КАК НА СКРИНШОТЕ (Скрепка слева, Инпут, Микрофон справа) -->
             <div class="chat-input-panel">
-                <button class="purple-btn" id="videoBtn" title="Записать видео-кружок">📹</button>
-                <button class="purple-btn" id="voiceBtn" title="Записать голосовое сообщение">🎤</button>
-                <input type="text" id="msgInput" placeholder="Печатать…" autocomplete="off">
-                <button class="purple-btn" id="sendMsgBtn" title="Отправить">➤</button>
+                <button class="input-icon-btn" id="videoBtn" title="Записать видео-кружок">📎</button>
+                <input type="text" id="msgInput" placeholder="Сообщение" autocomplete="off">
+                <button class="input-icon-btn" id="voiceBtn" title="Записать голосовое сообщение">🎤</button>
+                <button class="purple-send-btn" id="sendMsgBtn" title="Отправить">➤</button>
             </div>
         </div>
 
@@ -1009,13 +1034,18 @@
             document.getElementById('mediaModal').style.display = 'none';
         };
 
-        // ПРОСМОТР И ВОСПРОИЗВЕДЕНИЕ СООБЩЕНИЙ В СТИЛЕ TELEGRAM
+        // ВОСПРОИЗВЕДЕНИЕ КАК НА СКРИНШОТЕ
         const videoPlayerModal = document.getElementById('videoPlayerModal');
         const fullscreenCircleVideo = document.getElementById('fullscreenCircleVideo');
         document.getElementById('closeVideoPlayerBtn').onclick = () => {
             fullscreenCircleVideo.pause();
             videoPlayerModal.style.display = 'none';
         };
+
+        function formatTime(timestamp) {
+            const date = new Date(timestamp || Date.now());
+            return date.getHours().toString().padStart(2, '0') + ':' + date.getMinutes().toString().padStart(2, '0');
+        }
 
         function loadMessages() {
             const box = document.getElementById('chatMessages');
@@ -1036,77 +1066,84 @@
 
                 Object.values(data).forEach(msg => {
                     const isOutgoing = (msg.username === myUsername);
+                    const timeStr = formatTime(msg.timestamp);
 
                     if (msg.type === 'video') {
-                        // Видео-кружок с иконкой Play, открывающийся в красивом модальном окне
-                        const container = document.createElement('div');
-                        container.className = `video-circle-container ${isOutgoing ? 'outgoing' : ''}`;
-                        
-                        const circle = document.createElement('div');
-                        circle.className = 'video-circle-msg';
-                        
+                        // Видео-кружок в точности как на скриншоте
+                        const wrapper = document.createElement('div');
+                        wrapper.className = 'video-circle-wrapper';
+
+                        const boxElem = document.createElement('div');
+                        boxElem.className = 'video-circle-box';
+
                         const video = document.createElement('video');
                         video.src = msg.mediaUrl;
                         video.playsInline = true;
-                        
-                        const badge = document.createElement('div');
-                        badge.className = 'video-play-badge';
-                        badge.innerHTML = '▶';
 
-                        circle.appendChild(video);
-                        circle.appendChild(badge);
+                        const overlay = document.createElement('div');
+                        overlay.className = 'video-circle-overlay';
+                        overlay.innerHTML = '<span style="font-size: 1.8rem; color: #fff; opacity: 0.85;">▶</span>';
 
-                        circle.onclick = () => {
+                        boxElem.appendChild(video);
+                        boxElem.appendChild(overlay);
+
+                        boxElem.onclick = () => {
                             fullscreenCircleVideo.src = msg.mediaUrl;
                             videoPlayerModal.style.display = 'flex';
                             fullscreenCircleVideo.play();
                         };
 
-                        const author = document.createElement('div');
-                        author.style.fontSize = '0.7rem';
-                        author.style.color = '#d8b4fe';
-                        author.textContent = msg.sender;
+                        const footer = document.createElement('div');
+                        footer.className = 'video-circle-footer';
+                        footer.innerHTML = `
+                            <span>0:01</span>
+                            <div class="video-meta-right">
+                                <span style="font-size: 0.9rem;">🔇</span>
+                                <span>${timeStr}</span>
+                                <span style="color: #c084fc; font-weight: bold;">✓✓</span>
+                            </div>
+                        `;
 
-                        container.appendChild(author);
-                        container.appendChild(circle);
-                        box.appendChild(container);
+                        wrapper.appendChild(boxElem);
+                        wrapper.appendChild(footer);
+                        box.appendChild(wrapper);
 
                     } else if (msg.type === 'voice') {
-                        // Интерактивное голосовое сообщение в стиле Telegram
-                        const bubble = document.createElement('div');
-                        bubble.className = `voice-bubble ${isOutgoing ? 'outgoing' : ''}`;
+                        // Голосовое сообщение (капсула как на скриншоте)
+                        const capsule = document.createElement('div');
+                        capsule.className = 'voice-msg-capsule';
 
                         const playBtn = document.createElement('button');
                         playBtn.className = 'voice-play-btn';
                         playBtn.innerHTML = '▶';
 
-                        const details = document.createElement('div');
-                        details.style.display = 'flex';
-                        details.style.flexDirection = 'column';
-                        details.style.gap = '4px';
+                        const infoCol = document.createElement('div');
+                        infoCol.className = 'voice-info-col';
 
-                        const headerRow = document.createElement('div');
-                        headerRow.style.display = 'flex';
-                        headerRow.style.justifyContent = 'space-between';
-                        headerRow.style.fontSize = '0.75rem';
-                        headerRow.style.color = isOutgoing ? '#f3e8ff' : '#e879f9';
-                        headerRow.style.fontWeight = 'bold';
-                        headerRow.innerHTML = `<span>${msg.sender}</span>`;
-
-                        const waves = document.createElement('div');
-                        waves.className = 'voice-waves';
-                        for (let i = 0; i < 18; i++) {
-                            const bar = document.createElement('div');
-                            bar.className = 'voice-wave-bar';
-                            bar.style.height = (Math.sin(i) * 8 + 12) + 'px';
-                            waves.appendChild(bar);
+                        const wavesRow = document.createElement('div');
+                        wavesRow.className = 'voice-waves-row';
+                        for (let i = 0; i < 22; i++) {
+                            const line = document.createElement('div');
+                            line.className = 'voice-wave-line';
+                            line.style.height = (Math.sin(i * 0.7) * 7 + 12) + 'px';
+                            wavesRow.appendChild(line);
                         }
 
-                        details.appendChild(headerRow);
-                        details.appendChild(waves);
+                        const footerRow = document.createElement('div');
+                        footerRow.className = 'voice-footer-row';
+                        footerRow.innerHTML = `
+                            <span>0:01</span>
+                            <div>
+                                <span>${timeStr}</span>
+                                <span style="font-weight: bold; margin-left: 2px;">✓✓</span>
+                            </div>
+                        `;
 
-                        bubble.appendChild(playBtn);
-                        bubble.appendChild(details);
+                        infoCol.appendChild(wavesRow);
+                        infoCol.appendChild(footerRow);
+
+                        capsule.appendChild(playBtn);
+                        capsule.appendChild(infoCol);
 
                         const audioElement = new Audio(msg.mediaUrl);
                         playBtn.onclick = () => {
@@ -1122,14 +1159,14 @@
                             playBtn.innerHTML = '▶';
                         };
 
-                        box.appendChild(bubble);
+                        box.appendChild(capsule);
 
                     } else {
-                        // Обычное текстовое сообщение
+                        // Обычный текст
                         const div = document.createElement('div');
                         div.classList.add('msg-bubble');
                         if (isOutgoing) div.classList.add('outgoing');
-                        div.innerHTML = `<div style="font-size: 0.75rem; color: #e879f9; font-weight: bold; margin-bottom: 2px;">${msg.sender}</div>${msg.text}`;
+                        div.innerHTML = `<div>${msg.text}</div><div style="text-align: right; font-size: 0.7rem; color: #d8b4fe; margin-top: 2px;">${timeStr}</div>`;
                         box.appendChild(div);
                     }
                 });
