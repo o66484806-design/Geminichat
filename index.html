@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Cosmic Messenger</title>
-    <meta name="theme-color" content="#030712">
+    <meta name="theme-color" content="#0d0221">
     <style>
         * {
             box-sizing: border-box;
@@ -15,8 +15,8 @@
         }
 
         body {
-            background-color: #000;
-            color: #f3f4f6;
+            background-color: #030007;
+            color: #f3e8ff;
             min-height: 100vh;
             min-height: 100dvh;
             display: flex;
@@ -33,7 +33,7 @@
             flex-direction: column;
             position: relative;
             overflow: hidden;
-            background-color: #000;
+            background-color: #0d0221;
         }
 
         .bg-cosmic {
@@ -42,19 +42,9 @@
             left: -10%;
             width: 120%;
             height: 120%;
-            background-image: url('https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?q=80&w=2000&auto=format&fit=crop');
-            background-size: cover;
-            background-position: center;
+            background: radial-gradient(circle at center, #2e1065 0%, #170338 50%, #030007 100%);
             z-index: 0;
             pointer-events: none;
-            filter: brightness(1.05) contrast(1.2);
-            animation: cosmicMotion 25s ease-in-out infinite alternate;
-        }
-
-        @keyframes cosmicMotion {
-            0% { transform: scale(1) translate(0, 0) rotate(0deg); }
-            50% { transform: scale(1.08) translate(-2%, -3%) rotate(1deg); }
-            100% { transform: scale(1.15) translate(2%, 3%) rotate(-1deg); }
         }
 
         @media (min-width: 768px) {
@@ -63,8 +53,8 @@
                 height: 85vh;
                 min-height: auto;
                 border-radius: 24px;
-                box-shadow: 0 0 50px rgba(168, 85, 247, 0.4), 0 25px 50px rgba(0, 0, 0, 0.95);
-                border: 1px solid rgba(168, 85, 247, 0.5);
+                box-shadow: 0 0 40px rgba(168, 85, 247, 0.3), 0 20px 40px rgba(0, 0, 0, 0.9);
+                border: 1px solid rgba(168, 85, 247, 0.4);
                 overflow: hidden;
             }
         }
@@ -77,7 +67,7 @@
             height: calc(100% - 65px);
             display: none;
             flex-direction: column;
-            background: rgba(5, 7, 15, 0.4);
+            background: rgba(13, 2, 33, 0.7);
             z-index: 5;
         }
 
@@ -91,7 +81,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(5, 7, 15, 0.95);
+            background: #0d0221;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -104,12 +94,12 @@
 
         #authScreen h2 {
             margin-bottom: 8px;
-            color: #d8b4fe;
-            text-shadow: 0 0 20px rgba(192, 132, 252, 0.9);
+            color: #e879f9;
+            text-shadow: 0 0 15px rgba(232, 121, 249, 0.6);
         }
 
         #authScreen p {
-            color: #d1d5db;
+            color: #d8b4fe;
             font-size: 0.9rem;
             margin-bottom: 20px;
         }
@@ -127,12 +117,11 @@
             width: 100%;
             padding: 14px 18px;
             border-radius: 14px;
-            border: 1px solid rgba(168, 85, 247, 0.6);
-            background: rgba(10, 15, 30, 0.8);
+            border: 1px solid rgba(168, 85, 247, 0.5);
+            background: rgba(46, 16, 101, 0.4);
             color: #fff;
             font-size: 1rem;
             outline: none;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
 
         #authScreen button, #saveProfileBtn, #switchAccountBtn, #registerBtn, .modal-box button {
@@ -141,12 +130,12 @@
             padding: 14px;
             border-radius: 14px;
             border: none;
-            background: linear-gradient(135deg, #a855f7, #7c3aed);
+            background: linear-gradient(135deg, #a855f7, #6b21a8);
             color: #fff;
             font-weight: bold;
             font-size: 1rem;
             cursor: pointer;
-            box-shadow: 0 4px 20px rgba(168, 85, 247, 0.6);
+            box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4);
         }
 
         .accounts-list {
@@ -161,10 +150,10 @@
         }
 
         .account-card {
-            background: rgba(10, 15, 30, 0.8);
+            background: rgba(46, 16, 101, 0.5);
             padding: 10px 14px;
             border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.25);
+            border: 1px solid rgba(168, 85, 247, 0.3);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -172,20 +161,19 @@
         }
 
         .account-info { text-align: left; }
-        .account-info h4 { font-size: 0.9rem; color: #fff; }
-        .account-info p { font-size: 0.75rem; color: #d1d5db; margin: 0; }
+        .account-info h4 { font-size: 0.9rem; color: #f3e8ff; }
+        .account-info p { font-size: 0.75rem; color: #d8b4fe; margin: 0; }
 
         .header {
             padding: 14px 20px;
-            background: rgba(10, 15, 30, 0.7);
+            background: rgba(23, 3, 56, 0.85);
             border-bottom: 1px solid rgba(168, 85, 247, 0.3);
             display: flex;
             align-items: center;
             justify-content: space-between;
             font-weight: 600;
             flex-shrink: 0;
-            color: #d8b4fe;
-            text-shadow: 0 0 10px rgba(192, 132, 252, 0.5);
+            color: #e879f9;
         }
 
         .nav-bar {
@@ -194,7 +182,7 @@
             left: 0;
             width: 100%;
             height: 65px;
-            background: rgba(8, 12, 24, 0.85);
+            background: rgba(23, 3, 56, 0.9);
             border-top: 1px solid rgba(168, 85, 247, 0.3);
             display: flex;
             justify-content: space-around;
@@ -216,8 +204,8 @@
         }
 
         .nav-item.active {
-            color: #d8b4fe;
-            text-shadow: 0 0 15px rgba(216, 180, 254, 0.9);
+            color: #e879f9;
+            text-shadow: 0 0 10px rgba(232, 121, 249, 0.6);
         }
 
         .nav-item svg { width: 22px; height: 22px; fill: currentColor; }
@@ -233,19 +221,18 @@
         }
 
         .list-item {
-            background: rgba(10, 15, 30, 0.7);
+            background: rgba(46, 16, 101, 0.35);
             padding: 12px 16px;
             border-radius: 14px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(168, 85, 247, 0.25);
             display: flex;
             align-items: center;
             justify-content: space-between;
             cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
 
-        .item-info h4 { font-size: 0.95rem; margin-bottom: 2px; color: #fff; }
-        .item-info p { font-size: 0.8rem; color: #d1d5db; }
+        .item-info h4 { font-size: 0.95rem; margin-bottom: 2px; color: #f3e8ff; }
+        .item-info p { font-size: 0.8rem; color: #d8b4fe; }
 
         #chatRoomScreen { z-index: 6; background: transparent; }
 
@@ -259,80 +246,87 @@
             gap: 12px;
         }
 
-        /* Обычные сообщения */
+        /* Текстовые сообщения в фиолетовых тонах */
         .msg-bubble {
             max-width: 75%;
             padding: 10px 14px;
             border-radius: 14px;
             font-size: 0.95rem;
             word-break: break-word;
-            background: rgba(15, 23, 42, 0.85);
-            border: 1px solid rgba(255, 255, 255, 0.25);
+            background: rgba(46, 16, 101, 0.6);
+            border: 1px solid rgba(168, 85, 247, 0.3);
             align-self: flex-start;
             border-bottom-left-radius: 4px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            color: #fff;
+            color: #f3e8ff;
         }
 
         .msg-bubble.outgoing {
-            background: linear-gradient(135deg, #a855f7, #7c3aed);
+            background: linear-gradient(135deg, #9333ea, #6b21a8);
             color: #fff;
             align-self: flex-end;
-            border: none;
-            box-shadow: 0 4px 15px rgba(168, 85, 247, 0.5);
+            border: 1px solid rgba(216, 180, 254, 0.4);
             border-bottom-left-radius: 14px;
             border-bottom-right-radius: 4px;
         }
 
-        /* Стили для TELEGRAM-like Кружков в чате */
+        /* Видео-кружки в стиле Telegram (Фиолетовая рамка, идеальный круг) */
+        .video-circle-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            align-self: flex-start;
+            gap: 4px;
+            max-width: 75%;
+        }
+        .video-circle-container.outgoing {
+            align-self: flex-end;
+            align-items: flex-end;
+        }
+
         .video-circle-msg {
-            width: 150px;
-            height: 150px;
+            width: 140px;
+            height: 140px;
             border-radius: 50%;
             overflow: hidden;
             border: 3px solid #c084fc;
-            box-shadow: 0 4px 20px rgba(168, 85, 247, 0.6);
+            box-shadow: 0 4px 15px rgba(168, 85, 247, 0.5);
             background: #000;
             position: relative;
-            align-self: flex-start;
+            cursor: pointer;
         }
-        .video-circle-msg.outgoing {
-            align-self: flex-end;
-            border-color: #e879f9;
-        }
-        .video-circle-msg video, .video-circle-msg img {
+        .video-circle-msg video {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
 
-        /* Стили для TELEGRAM-like Голосовых в чате */
+        /* Голосовые сообщения (Капсула с аудиоплеером) */
         .voice-msg-box {
             display: flex;
             align-items: center;
             gap: 10px;
-            background: linear-gradient(135deg, rgba(168, 85, 247, 0.25), rgba(124, 58, 237, 0.4));
-            border: 1px solid rgba(192, 132, 252, 0.5);
-            padding: 10px 16px;
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.3), rgba(88, 28, 135, 0.5));
+            border: 1px solid rgba(192, 132, 252, 0.4);
+            padding: 10px 14px;
             border-radius: 20px;
-            max-width: 75%;
+            max-width: 80%;
             align-self: flex-start;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            color: #f3e8ff;
         }
         .voice-msg-box.outgoing {
             align-self: flex-end;
-            background: linear-gradient(135deg, #9333ea, #6b21a8);
+            background: linear-gradient(135deg, #7e22ce, #581c87);
         }
-        .voice-wave {
-            font-size: 0.9rem;
-            letter-spacing: 2px;
-            color: #e9d5ff;
+        .voice-msg-box audio {
+            height: 32px;
+            max-width: 190px;
+            accent-color: #c084fc;
         }
 
-        /* ЧАТ-ПАНЕЛЬ ВВОДА (С прозрачно-фиолетовыми элементами и фиолетовыми кнопками) */
+        /* ПАНЕЛЬ ВВОДА */
         .chat-input-panel {
             padding: 10px 14px;
-            background: rgba(8, 12, 24, 0.85);
+            background: rgba(23, 3, 56, 0.9);
             border-top: 1px solid rgba(168, 85, 247, 0.3);
             display: flex;
             align-items: center;
@@ -346,25 +340,23 @@
             padding: 12px 18px;
             border-radius: 22px;
             border: 1px solid rgba(168, 85, 247, 0.5);
-            background: rgba(124, 58, 237, 0.15);
+            background: rgba(76, 29, 149, 0.25);
             color: #fff;
             font-size: 0.95rem;
             outline: none;
-            box-shadow: inset 0 2px 6px rgba(0,0,0,0.3);
         }
         .chat-input-panel input::placeholder {
             color: #d8b4fe;
             opacity: 0.7;
         }
         .chat-input-panel input:focus {
-            border-color: #c084fc;
-            background: rgba(124, 58, 237, 0.25);
-            box-shadow: 0 0 15px rgba(192, 132, 252, 0.4);
+            border-color: #e879f9;
+            background: rgba(76, 29, 149, 0.4);
         }
 
-        /* Закрашенные фиолетовые кнопки (видео, микрофон, отправка) */
+        /* Закрашенные фиолетовые кнопки */
         .purple-btn {
-            background: linear-gradient(135deg, #a855f7, #7c3aed);
+            background: linear-gradient(135deg, #a855f7, #6b21a8);
             border: none;
             color: #fff;
             width: 42px;
@@ -374,10 +366,9 @@
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            box-shadow: 0 4px 12px rgba(168, 85, 247, 0.5);
+            box-shadow: 0 4px 12px rgba(168, 85, 247, 0.4);
             font-size: 1.1rem;
             flex-shrink: 0;
-            transition: transform 0.1s, box-shadow 0.2s;
         }
         .purple-btn:active {
             transform: scale(0.92);
@@ -386,7 +377,7 @@
         .action-btn {
             background: none;
             border: none;
-            color: #d8b4fe;
+            color: #e879f9;
             cursor: pointer;
             font-size: 1.2rem;
             padding: 6px;
@@ -403,8 +394,8 @@
         }
 
         .settings-card {
-            background: rgba(10, 15, 30, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(46, 16, 101, 0.35);
+            border: 1px solid rgba(168, 85, 247, 0.25);
             padding: 16px;
             border-radius: 16px;
             display: flex;
@@ -412,20 +403,20 @@
             gap: 10px;
         }
 
-        .settings-card label { font-size: 0.85rem; color: #d1d5db; }
+        .settings-card label { font-size: 0.85rem; color: #d8b4fe; }
 
         .modal {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.7);
+            background: rgba(3, 0, 7, 0.85);
             display: none;
             justify-content: center;
             align-items: center;
             z-index: 40;
         }
         .modal-box {
-            background: rgba(10, 15, 30, 0.95);
-            border: 1px solid rgba(168, 85, 247, 0.6);
+            background: #170338;
+            border: 1px solid rgba(168, 85, 247, 0.5);
             padding: 24px;
             border-radius: 20px;
             width: 85%;
@@ -434,6 +425,7 @@
             flex-direction: column;
             gap: 14px;
             text-align: center;
+            box-shadow: 0 0 30px rgba(168, 85, 247, 0.3);
         }
     </style>
 </head>
@@ -442,10 +434,10 @@
     <div class="app-container">
         <div class="bg-cosmic"></div>
         
-        <!-- ЭКРАН АВТОРИЗАЦИИ / РЕГИСТРАЦИИ -->
+        <!-- ЭКРАН АВТОРИЗАЦИИ -->
         <div id="authScreen">
             <h2>Cosmic Messenger</h2>
-            <p>Облачный мессенджер нового поколения</p>
+            <p>Фиолетовый защищенный мессенджер</p>
             <div class="auth-inputs">
                 <input type="text" id="regName" placeholder="Ваше имя..." autocomplete="off">
                 <input type="text" id="regUsername" placeholder="Юзернейм (например, @alex)" autocomplete="off">
@@ -455,7 +447,7 @@
             <button id="registerBtn" type="button">Создать и войти</button>
             
             <div id="savedAccountsSection" style="width: 100%; display: flex; flex-direction: column; align-items: center; display: none;">
-                <p style="margin: 16px 0 6px 0; font-size: 0.8rem; color: #d1d5db;">Сохраненные профили:</p>
+                <p style="margin: 16px 0 6px 0; font-size: 0.8rem; color: #d8b4fe;">Сохраненные профили:</p>
                 <div class="accounts-list" id="accountsListContainer"></div>
             </div>
         </div>
@@ -467,8 +459,8 @@
                 <button class="action-btn" id="openGroupModalBtn" title="Создать группу">➕</button>
             </div>
             <div class="list-container" id="chatsList">
-                <div class="list-item" style="cursor: default; background: transparent; border: none; justify-content: center; color: #d1d5db; text-align: center; box-shadow: none;">
-                    Список чатов пуст. Найдите собеседника через поиск.
+                <div class="list-item" style="cursor: default; background: transparent; border: none; justify-content: center; color: #d8b4fe; text-align: center;">
+                    Список чатов пуст. Воспользуйтесь поиском.
                 </div>
             </div>
         </div>
@@ -492,14 +484,14 @@
                 </div>
                 <div class="settings-card">
                     <label>Юзернейм</label>
-                    <input type="text" id="editUsername" readonly style="background: rgba(5,7,15,0.5); color:#9ca3af;">
+                    <input type="text" id="editUsername" readonly style="background: rgba(23,3,56,0.6); color:#9ca3af;">
                 </div>
                 <div class="settings-card">
                     <label>Номер телефона</label>
-                    <input type="text" id="editPhone" readonly style="background: rgba(5,7,15,0.5); color:#9ca3af;">
+                    <input type="text" id="editPhone" readonly style="background: rgba(23,3,56,0.6); color:#9ca3af;">
                 </div>
                 <button id="saveProfileBtn">Сохранить</button>
-                <button id="switchAccountBtn">Сменить аккаунт</button>
+                <button id="switchAccountBtn" style="background: rgba(76, 29, 149, 0.4); border: 1px solid rgba(168,85,247,0.4);">Сменить аккаунт</button>
             </div>
         </div>
 
@@ -507,12 +499,12 @@
         <div id="chatRoomScreen" class="screen">
             <div class="header">
                 <button class="action-btn" id="closeChatBtn">⬅</button>
-                <span id="activeChatTitle" style="color: #d8b4fe;">Чат</span>
+                <span id="activeChatTitle" style="color: #e879f9;">Чат</span>
                 <span></span>
             </div>
             <div class="chat-messages" id="chatMessages"></div>
             
-            <!-- ПАНЕЛЬ ВВОДА СОГАСНО ТРЕБОВАНИЯМ -->
+            <!-- ПАНЕЛЬ ВВОДА -->
             <div class="chat-input-panel">
                 <button class="purple-btn" id="videoBtn" title="Записать видео-кружок">📹</button>
                 <button class="purple-btn" id="voiceBtn" title="Записать голосовое сообщение">🎤</button>
@@ -540,34 +532,34 @@
         <!-- МОДАЛКА ГРУППЫ -->
         <div class="modal" id="groupModal">
             <div class="modal-box">
-                <h3 style="color: #d8b4fe;">Создать группу</h3>
+                <h3 style="color: #e879f9;">Создать группу</h3>
                 <input type="text" id="groupNameInput" placeholder="Название группы..." autocomplete="off">
                 <button id="createGroupConfirmBtn">Создать</button>
-                <button id="closeGroupModalBtn" style="background:none; box-shadow:none; color:#d1d5db;">Отмена</button>
+                <button id="closeGroupModalBtn" style="background:none; box-shadow:none; color:#d8b4fe;">Отмена</button>
             </div>
         </div>
 
         <!-- МОДАЛКА ПАРОЛЯ -->
         <div class="modal" id="passwordModal">
             <div class="modal-box">
-                <h3 style="color: #d8b4fe;">Защита профиля</h3>
-                <p style="font-size: 0.85rem; color: #d1d5db;" id="passwordPromptText">Введите пароль</p>
+                <h3 style="color: #e879f9;">Защита профиля</h3>
+                <p style="font-size: 0.85rem; color: #d8b4fe;" id="passwordPromptText">Введите пароль</p>
                 <input type="password" id="loginPasswordInput" placeholder="Пароль..." autocomplete="current-password">
                 <button id="confirmLoginBtn">Войти</button>
-                <button id="cancelLoginBtn" style="background:none; box-shadow:none; color:#d1d5db;">Отмена</button>
+                <button id="cancelLoginBtn" style="background:none; box-shadow:none; color:#d8b4fe;">Отмена</button>
             </div>
         </div>
 
-        <!-- МОДАЛКА ЗАПИСИ -->
+        <!-- МОДАЛКА ЗАПИСИ МЕДИА -->
         <div class="modal" id="mediaModal">
             <div class="modal-box">
-                <h3 id="mediaModalTitle" style="color: #d8b4fe;">Запись</h3>
-                <div id="mediaPreviewContainer" style="display:flex; justify-content:center; align-items:center; margin: 15px 0;">
-                    <video id="mediaPreviewVideo" autoplay muted playsinline style="width: 200px; height: 200px; border-radius: 50%; object-fit: cover; border: 3px solid #d8b4fe; display:none; box-shadow: 0 0 25px rgba(168,85,247,0.6);"></video>
+                <h3 id="mediaModalTitle" style="color: #e879f9;">Запись</h3>
+                <div style="display:flex; justify-content:center; align-items:center; margin: 10px 0;">
+                    <video id="mediaPreviewVideo" autoplay muted playsinline style="width: 140px; height: 140px; border-radius: 50%; object-fit: cover; border: 3px solid #c084fc; display:none;"></video>
                 </div>
-                <p id="recordingTimer" style="font-size: 1.2rem; color: #f87171; font-weight: bold;">00:00</p>
-                <button id="stopAndSendMediaBtn" style="background: #ef4444; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.6);">Остановить и отправить</button>
-                <button id="cancelMediaBtn" style="background:none; box-shadow:none; color:#d1d5db;">Отмена</button>
+                <p id="recordingTimer" style="font-size: 1.2rem; color: #f472b6; font-weight: bold;">00:00</p>
+                <button id="stopAndSendMediaBtn" style="background: #9333ea; box-shadow: 0 4px 15px rgba(147, 51, 234, 0.6);">Остановить и отправить</button>
+                <button id="cancelMediaBtn" style="background:none; box-shadow:none; color:#d8b4fe;">Отмена</button>
             </div>
         </div>
     </div>
@@ -597,10 +589,6 @@
         let currentChatId = null;
         let messageListener = null;
         let userChatsListener = null;
-
-        if (window.Notification && Notification.permission !== "granted") {
-            Notification.requestPermission();
-        }
 
         function cleanKey(str) {
             if (!str) return 'unknown';
@@ -642,7 +630,7 @@
                         <h4>🔒 ${acc.name} (${acc.username})</h4>
                         <p>${acc.phone || 'Нет номера'}</p>
                     </div>
-                    <span style="color: #d8b4fe; font-size: 1.2rem;">➜</span>
+                    <span style="color: #e879f9; font-size: 1.2rem;">➜</span>
                 `;
                 card.onclick = () => openPasswordCheckModal(acc);
                 container.appendChild(card);
@@ -751,16 +739,11 @@
 
                     Object.values(users).forEach(user => {
                         if (!user.username || user.username === myUsername) return;
-                        
-                        const matchName = user.name && user.name.toLowerCase().includes(query);
-                        const matchUname = user.username && user.username.toLowerCase().includes(query);
-                        const matchPhone = user.phone && user.phone.toLowerCase().includes(query);
-
-                        if (matchName || matchUname || matchPhone) {
+                        if ((user.name && user.name.toLowerCase().includes(query)) || user.username.toLowerCase().includes(query)) {
                             found = true;
                             const div = document.createElement('div');
                             div.classList.add('list-item');
-                            div.innerHTML = `<div class="item-info"><h4>👤 ${user.name || 'Без имени'} (${user.phone || 'без номера'})</h4><p>${user.username}</p></div>`;
+                            div.innerHTML = `<div class="item-info"><h4>👤 ${user.name}</h4><p>${user.username}</p></div>`;
                             div.addEventListener('click', () => openPersonalChat(user));
                             resultsBox.appendChild(div);
                         }
@@ -779,35 +762,18 @@
                     });
 
                     if (!found) {
-                        resultsBox.innerHTML = '<div style="padding: 15px; color: #d1d5db; text-align: center;">Ничего не найдено</div>';
+                        resultsBox.innerHTML = '<div style="padding: 15px; color: #d8b4fe; text-align: center;">Ничего не найдено</div>';
                     }
                 });
             });
         });
 
         function openPersonalChat(user) {
-            if (!user.username) {
-                alert('У этого пользователя не задан юзернейм, чат создать нельзя.');
-                return;
-            }
-
             const sorted = [myUsername, user.username].sort();
             currentChatId = 'chat_' + cleanKey(sorted[0]) + '_' + cleanKey(sorted[1]);
             
-            const myKey = cleanKey(myUsername);
-            const targetKey = cleanKey(user.username);
-
-            db.ref(`user_chats/${myKey}/${currentChatId}`).set({
-                title: user.name || 'Собеседник',
-                type: 'private',
-                id: currentChatId
-            });
-
-            db.ref(`user_chats/${targetKey}/${currentChatId}`).set({
-                title: myName || 'Собеседник',
-                type: 'private',
-                id: currentChatId
-            });
+            db.ref(`user_chats/${cleanKey(myUsername)}/${currentChatId}`).set({ title: user.name || 'Собеседник', type: 'private', id: currentChatId });
+            db.ref(`user_chats/${cleanKey(user.username)}/${currentChatId}`).set({ title: myName || 'Собеседник', type: 'private', id: currentChatId });
 
             document.getElementById('activeChatTitle').textContent = user.name || 'Чат';
             switchScreen('chatRoomScreen');
@@ -816,11 +782,7 @@
 
         function joinGroupChat(gId, gName) {
             currentChatId = gId;
-            db.ref(`user_chats/${cleanKey(myUsername)}/${gId}`).set({
-                title: 'Группа: ' + gName,
-                type: 'group',
-                id: gId
-            });
+            db.ref(`user_chats/${cleanKey(myUsername)}/${gId}`).set({ title: 'Группа: ' + gName, type: 'group', id: gId });
             document.getElementById('activeChatTitle').textContent = '👥 ' + gName;
             switchScreen('chatRoomScreen');
             loadMessages();
@@ -843,7 +805,7 @@
                 chatsList.innerHTML = '';
                 const chats = snapshot.val();
                 if (!chats) {
-                    chatsList.innerHTML = '<div style="color: #d1d5db; text-align: center; margin-top: 20px;">Список чатов пуст. Воспользуйтесь поиском.</div>';
+                    chatsList.innerHTML = '<div style="color: #d8b4fe; text-align: center; margin-top: 20px;">Список чатов пуст. Воспользуйтесь поиском.</div>';
                     return;
                 }
 
@@ -870,20 +832,20 @@
             const text = textInput.value.trim();
             if (!text || !currentChatId) return;
 
-            const messageData = {
+            db.ref('chats/' + currentChatId + '/messages').push({
                 sender: myName,
                 username: myUsername,
                 text: text,
                 type: 'text',
                 timestamp: Date.now()
-            };
-
-            db.ref('chats/' + currentChatId + '/messages').push(messageData);
+            });
             textInput.value = '';
         }
 
-        // ЗАПИСЬ МЕДИА (КРУЖКИ И ГОЛОСОВЫЕ)
+        // РЕАЛЬНАЯ ЗАПИСЬ ВИДЕО (КРУЖКОВ) И ГОЛОСОВЫХ С ВОСПРОИЗВЕДЕНИЕМ
         let mediaStream = null;
+        let mediaRecorder = null;
+        let audioChunks = [];
         let mediaTimerInterval = null;
         let secondsElapsed = 0;
         let currentMediaType = 'voice';
@@ -891,16 +853,16 @@
         document.getElementById('voiceBtn').addEventListener('click', async () => {
             currentMediaType = 'voice';
             document.getElementById('mediaModalTitle').textContent = 'Запись голосового';
-            openMediaModal(false);
+            await startRecording({ audio: true });
         });
 
         document.getElementById('videoBtn').addEventListener('click', async () => {
             currentMediaType = 'video';
             document.getElementById('mediaModalTitle').textContent = 'Видео-кружок';
-            openMediaModal(true);
+            await startRecording({ video: { width: 320, height: 320 }, audio: true });
         });
 
-        async function openMediaModal(withVideo) {
+        async function startRecording(constraints) {
             const modal = document.getElementById('mediaModal');
             const videoElem = document.getElementById('mediaPreviewVideo');
             const timerElem = document.getElementById('recordingTimer');
@@ -908,19 +870,25 @@
             modal.style.display = 'flex';
             secondsElapsed = 0;
             timerElem.textContent = "00:00";
+            audioChunks = [];
 
             try {
-                const constraints = withVideo ? { video: true, audio: true } : { audio: true };
                 mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
-                
-                if (withVideo) {
+                if (constraints.video) {
                     videoElem.srcObject = mediaStream;
                     videoElem.style.display = 'block';
                 } else {
                     videoElem.style.display = 'none';
                 }
+
+                mediaRecorder = new MediaRecorder(mediaStream);
+                mediaRecorder.ondataavailable = (event) => {
+                    if (event.data.size > 0) audioChunks.push(event.data);
+                };
+
+                mediaRecorder.start();
             } catch (err) {
-                alert('Нет доступа к камере/микрофону!');
+                alert('Ошибка доступа к микрофону или камере!');
                 modal.style.display = 'none';
                 return;
             }
@@ -935,23 +903,34 @@
 
         document.getElementById('stopAndSendMediaBtn').onclick = function() {
             clearInterval(mediaTimerInterval);
-            if (mediaStream) {
-                mediaStream.getTracks().forEach(track => track.stop());
-            }
             document.getElementById('mediaModal').style.display = 'none';
 
-            let msgText = currentMediaType === 'video' 
-                ? `📹 Кружок (${secondsElapsed} сек)` 
-                : `🎤 Голосовое (${secondsElapsed} сек)`;
+            if (!mediaRecorder) return;
 
-            const messageData = {
-                sender: myName,
-                username: myUsername,
-                text: msgText,
-                type: currentMediaType,
-                timestamp: Date.now()
+            mediaRecorder.onstop = () => {
+                const mimeType = currentMediaType === 'video' ? 'video/webm' : 'audio/webm';
+                const blob = new Blob(audioChunks, { type: mimeType });
+                const reader = new FileReader();
+
+                reader.readAsDataURL(blob);
+                reader.onloadend = function() {
+                    const base64data = reader.result;
+
+                    db.ref('chats/' + currentChatId + '/messages').push({
+                        sender: myName,
+                        username: myUsername,
+                        mediaUrl: base64data,
+                        type: currentMediaType,
+                        timestamp: Date.now()
+                    });
+
+                    if (mediaStream) {
+                        mediaStream.getTracks().forEach(track => track.stop());
+                    }
+                };
             };
-            db.ref('chats/' + currentChatId + '/messages').push(messageData);
+
+            mediaRecorder.stop();
         };
 
         document.getElementById('cancelMediaBtn').onclick = function() {
@@ -962,7 +941,7 @@
             document.getElementById('mediaModal').style.display = 'none';
         };
 
-        // ЗАГРУЗКА СООБЩЕНИЙ С TELEGRAM-ДИЗАЙНОМ ДЛЯ МЕДИА
+        // ЗАГРУЗКА И ОТОБРАЖЕНИЕ СООБЩЕНИЙ С РАБОЧИМ ПЛЕЕРОМ
         function loadMessages() {
             const box = document.getElementById('chatMessages');
             box.innerHTML = '';
@@ -971,63 +950,76 @@
                 db.ref('chats/' + currentChatId + '/messages').off('value', messageListener);
             }
 
-            let isFirstLoad = true;
-
             messageListener = db.ref('chats/' + currentChatId + '/messages').on('value', (snapshot) => {
                 box.innerHTML = '';
                 const data = snapshot.val();
 
                 if (!data) {
-                    box.innerHTML = '<div style="color: gray; text-align: center; margin-top: 20px;">Нет сообщений. Напишите первыми!</div>';
-                    isFirstLoad = false;
+                    box.innerHTML = '<div style="color: #d8b4fe; text-align: center; margin-top: 20px;">Нет сообщений. Напишите первыми!</div>';
                     return;
                 }
 
-                const messagesArray = Object.values(data);
-                const lastMsg = messagesArray[messagesArray.length - 1];
-
-                if (!isFirstLoad && lastMsg && lastMsg.username !== myUsername) {
-                    if (window.Notification && Notification.permission === "granted") {
-                        new Notification(`Сообщение от ${lastMsg.sender}`, {
-                            body: lastMsg.text,
-                            icon: 'https://cdn-icons-png.flaticon.com/512/733/733585.png'
-                        });
-                    }
-                }
-
-                messagesArray.forEach(msg => {
+                Object.values(data).forEach(msg => {
                     const isOutgoing = (msg.username === myUsername);
 
                     if (msg.type === 'video') {
-                        // Отрисовка кружка в телеграм-стиле
-                        const div = document.createElement('div');
-                        div.className = `video-circle-msg ${isOutgoing ? 'outgoing' : ''}`;
-                        div.innerHTML = `<div style="display:flex; justify-content:center; align-items:center; width:100%; height:100%; background:#2e1065; color:#d8b4fe; font-size:0.8rem; text-align:center; padding:10px;">${msg.text}</div>`;
-                        box.appendChild(div);
+                        // Полноценный видео-кружок с возможностью кликнуть и запустить воспроизведение
+                        const container = document.createElement('div');
+                        container.className = `video-circle-container ${isOutgoing ? 'outgoing' : ''}`;
+                        
+                        const circle = document.createElement('div');
+                        circle.className = 'video-circle-msg';
+                        
+                        const video = document.createElement('video');
+                        video.src = msg.mediaUrl;
+                        video.playsInline = true;
+                        video.controls = false;
+                        
+                        circle.appendChild(video);
+                        circle.onclick = () => {
+                            if (video.paused) video.play();
+                            else video.pause();
+                        };
+
+                        const author = document.createElement('div');
+                        author.style.fontSize = '0.7rem';
+                        author.style.color = '#d8b4fe';
+                        author.textContent = msg.sender;
+
+                        container.appendChild(author);
+                        container.appendChild(circle);
+                        box.appendChild(container);
+
                     } else if (msg.type === 'voice') {
-                        // Отрисовка голосового в фиолетовом телеграм-стиле
+                        // Полноценное голосовое сообщение со встроенным аудиоплеером
                         const div = document.createElement('div');
                         div.className = `voice-msg-box ${isOutgoing ? 'outgoing' : ''}`;
-                        div.innerHTML = `
-                            <span style="font-size: 1.3rem;">▶️</span>
-                            <div>
-                                <div style="font-size:0.7rem; color:#f3e8ff; font-weight:bold;">${msg.sender}</div>
-                                <div class="voice-wave">ılıll|lıllı. ${msg.text}</div>
-                            </div>
-                        `;
+                        
+                        const audio = document.createElement('audio');
+                        audio.src = msg.mediaUrl;
+                        audio.controls = true;
+
+                        const content = document.createElement('div');
+                        content.style.display = 'flex';
+                        content.style.flexDirection = 'column';
+                        content.style.gap = '2px';
+                        content.innerHTML = `<div style="font-size:0.7rem; color:#e879f9; font-weight:bold;">${msg.sender}</div>`;
+                        content.appendChild(audio);
+
+                        div.appendChild(content);
                         box.appendChild(div);
+
                     } else {
                         // Обычное текстовое сообщение
                         const div = document.createElement('div');
                         div.classList.add('msg-bubble');
                         if (isOutgoing) div.classList.add('outgoing');
-                        div.innerHTML = `<div style="font-size: 0.75rem; color: #d8b4fe; font-weight: bold; margin-bottom: 2px;">${msg.sender}</div>${msg.text}`;
+                        div.innerHTML = `<div style="font-size: 0.75rem; color: #e879f9; font-weight: bold; margin-bottom: 2px;">${msg.sender}</div>${msg.text}`;
                         box.appendChild(div);
                     }
                 });
 
                 box.scrollTop = box.scrollHeight;
-                isFirstLoad = false;
             });
         }
 
@@ -1050,11 +1042,7 @@
             const gId = 'group_' + Date.now();
             db.ref('groups/' + gId).set({ name: gName, creator: myUsername });
             
-            db.ref(`user_chats/${cleanKey(myUsername)}/${gId}`).set({
-                title: 'Группа: ' + gName,
-                type: 'group',
-                id: gId
-            });
+            db.ref(`user_chats/${cleanKey(myUsername)}/${gId}`).set({ title: 'Группа: ' + gName, type: 'group', id: gId });
 
             groupModal.style.display = 'none';
             document.getElementById('groupNameInput').value = '';
