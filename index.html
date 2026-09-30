@@ -635,8 +635,12 @@
             <div class="chat-messages" id="chatMessages"></div>
             
             <div class="chat-input-panel">
-                <button class="input-icon-btn" id="videoBtn" title="Записать видео-кружок">📎</button>
+                <!-- СКРЕПКА ДЛЯ ФАЙЛОВ -->
+                <label for="fileInput" class="input-icon-btn" title="Прикрепить файл" style="cursor: pointer;">📎</label>
+                <input type="file" id="fileInput" style="display: none;" multiple>
+
                 <input type="text" id="msgInput" placeholder="Сообщение" autocomplete="off">
+                <button class="input-icon-btn" id="videoBtn" title="Записать видео-кружок">📹</button>
                 <button class="input-icon-btn" id="voiceBtn" title="Записать голосовое сообщение">🎤</button>
                 <button class="purple-send-btn" id="sendMsgBtn" title="Отправить">➤</button>
             </div>
@@ -773,7 +777,7 @@
                         const msg = msgSnap.val();
                         if (msg && msg.username !== myUsername && (Date.now() - msg.timestamp < 10000)) {
                             if (currentChatId !== chatId) {
-                                let previewText = msg.text || (msg.type === 'video' ? '📹 Видео-кружок' : (msg.type === 'voice' ? '🎤 Голосовое сообщение' : 'Медиа файл'));
+                                let previewText = msg.text || (msg.type === 'video' ? '📹 Видео-кружок' : (msg.type === 'voice' ? '🎤 Голосовое сообщение' : (msg.type === 'file' ? '📁 Файл' : 'Медиа файл')));
                                 showInAppNotification(msg.sender || 'Новое сообщение', previewText);
                             }
                         }
@@ -1014,14 +1018,34 @@
             textInput.value = '';
         }
 
-        // РАБОТА С МЕДИА И ПЕРЕКЛЮЧЕНИЕМ КАМЕРЫ (С ОДНОКРАТНЫМ ЗАПРОСОМ РАЗРЕШЕНИЙ)
+        // ОБРАБОТКА ВЫБОРА ФАЙЛОВ ЧЕРЕЗ СКРЕПКУ
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            const files = e.target.files;
+            if (!files.length || !currentChatId) return;
+
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const fileSizeKB = Math.round(file.size / 1024);
+                
+                db.ref('chats/' + currentChatId + '/messages').push({
+                    sender: myName,
+                    username: myUsername,
+                    text: `📁 Файл: ${file.name} (${fileSizeKB} KB)`,
+                    type: 'file',
+                    timestamp: Date.now()
+                });
+            }
+            e.target.value = ''; // сброс input
+        });
+
+        // РАБОТА С МЕДИА И ПЕРЕКЛЮЧЕНИЕМ КАМЕРЫ
         let mediaStream = null;
         let mediaRecorder = null;
         let audioChunks = [];
         let mediaTimerInterval = null;
         let secondsElapsed = 0;
         let currentMediaType = 'voice';
-        let currentFacingMode = 'user'; // 'user' (фронтальная) или 'environment' (основная)
+        let currentFacingMode = 'user'; 
         let hasMediaPermissionGranted = false;
 
         document.getElementById('voiceBtn').addEventListener('click', async () => {
@@ -1041,7 +1065,6 @@
         document.getElementById('flipCameraBtn').addEventListener('click', async () => {
             if (currentMediaType !== 'video') return;
             currentFacingMode = (currentFacingMode === 'user') ? 'environment' : 'user';
-            // Перезапускаем поток с новым направлением камеры без повторного запроса разрешений
             await startRecording();
         });
 
@@ -1055,7 +1078,6 @@
             timerElem.textContent = "00:00";
             audioChunks = [];
 
-            // Если старый поток активен — гасим его дорожки перед переключением
             if (mediaStream) {
                 mediaStream.getTracks().forEach(track => track.stop());
             }
@@ -1067,7 +1089,7 @@
                 };
 
                 mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
-                hasMediaPermissionGranted = true; // Разрешение получено, больше браузер не будет спрашивать повторно при переключении камеры
+                hasMediaPermissionGranted = true;
 
                 if (currentMediaType === 'video') {
                     videoElem.srcObject = mediaStream;
@@ -1091,7 +1113,6 @@
 
                 mediaRecorder.start();
 
-                // Запускаем таймер заново, если он не шел
                 clearInterval(mediaTimerInterval);
                 mediaTimerInterval = setInterval(() => {
                     secondsElapsed++;
