@@ -1022,7 +1022,7 @@
             textInput.value = '';
         }
 
-        // ОБРАБОТКА И ОТПРАВКА ФАЙЛОВ ЧЕРЕЗ СКРЕПКУ
+        // ОБРАБОТКА И ОТПРАВКА ФАЙЛОВ ЧЕРЕЗ СКРЕПКУ С ПОДДЕРЖКОЙ ОТКРЫТИЯ/СКАЧИВАНИЯ
         document.getElementById('fileInput').addEventListener('change', function(e) {
             const files = e.target.files;
             if (!files.length || !currentChatId) return;
@@ -1037,7 +1037,8 @@
                     db.ref('chats/' + currentChatId + '/messages').push({
                         sender: myName,
                         username: myUsername,
-                        text: `📁 Файл: ${file.name} (${fileSizeKB} KB)`,
+                        fileName: file.name,
+                        fileSize: fileSizeKB > 1024 ? (fileSizeKB / 1024).toFixed(1) + ' MB' : fileSizeKB + ' KB',
                         mediaUrl: reader.result,
                         type: 'file',
                         timestamp: Date.now()
@@ -1308,13 +1309,33 @@
                         const div = document.createElement('div');
                         div.classList.add('msg-bubble');
                         if (isOutgoing) div.classList.add('outgoing');
+                        
+                        const fileName = msg.fileName || 'Файл';
+                        const fileSize = msg.fileSize || '';
+
                         div.innerHTML = `
-                            <div>${msg.text}</div>
-                            <div style="margin-top: 6px;">
-                                <a href="${msg.mediaUrl}" download style="color: #e879f9; font-size: 0.85rem; text-decoration: underline;">Скачать файл</a>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span style="font-size: 1.8rem;">📎</span>
+                                <div style="flex: 1; overflow: hidden;">
+                                    <div style="font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${fileName}</div>
+                                    <div style="font-size: 0.75rem; color: #d8b4fe;">${fileSize}</div>
+                                </div>
                             </div>
-                            <div style="text-align: right; font-size: 0.7rem; color: #d8b4fe; margin-top: 2px;">${timeStr}</div>
+                            <div style="margin-top: 8px; display: flex; gap: 10px;">
+                                <button class="file-action-download" style="flex: 1; background: rgba(168,85,247,0.3); border: 1px solid #c084fc; color: #fff; padding: 6px; border-radius: 8px; cursor: pointer; font-size: 0.8rem;">Скачать</button>
+                            </div>
+                            <div style="text-align: right; font-size: 0.7rem; color: #d8b4fe; margin-top: 4px;">${timeStr}</div>
                         `;
+
+                        div.querySelector('.file-action-download').onclick = () => {
+                            const a = document.createElement('a');
+                            a.href = msg.mediaUrl;
+                            a.download = fileName;
+                            document.body.appendChild(a);
+                            a.click();
+                            document.body.removeChild(a);
+                        };
+
                         box.appendChild(div);
 
                     } else {
