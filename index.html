@@ -636,13 +636,17 @@
             <div class="chat-messages" id="chatMessages"></div>
             
             <div class="chat-input-panel">
+                <!-- СКРЕПКА ДЛЯ ФАЙЛОВ -->
                 <label for="fileInput" class="input-icon-btn" title="Прикрепить файл" style="cursor: pointer;">📎</label>
                 <input type="file" id="fileInput" style="display: none;" multiple>
 
                 <input type="text" id="msgInput" placeholder="Сообщение" autocomplete="off">
                 
+                <!-- КАМЕРА ДЛЯ ВИДЕО-КРУЖКОВ -->
                 <button class="input-icon-btn" id="videoBtn" title="Записать видео-кружок">📹</button>
+                <!-- МИКРОФОН ДЛЯ ГОЛОСОВЫХ -->
                 <button class="input-icon-btn" id="voiceBtn" title="Записать голосовое сообщение">🎤</button>
+                
                 <button class="purple-send-btn" id="sendMsgBtn" title="Отправить">➤</button>
             </div>
         </div>
@@ -1018,6 +1022,7 @@
             textInput.value = '';
         }
 
+        // ОБРАБОТКА И ОТПРАВКА ФАЙЛОВ ЧЕРЕЗ СКРЕПКУ
         document.getElementById('fileInput').addEventListener('change', function(e) {
             const files = e.target.files;
             if (!files.length || !currentChatId) return;
@@ -1026,13 +1031,18 @@
                 const file = files[i];
                 const fileSizeKB = Math.round(file.size / 1024);
                 
-                db.ref('chats/' + currentChatId + '/messages').push({
-                    sender: myName,
-                    username: myUsername,
-                    text: `📁 Файл: ${file.name} (${fileSizeKB} KB)`,
-                    type: 'file',
-                    timestamp: Date.now()
-                });
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onloadend = function() {
+                    db.ref('chats/' + currentChatId + '/messages').push({
+                        sender: myName,
+                        username: myUsername,
+                        text: `📁 Файл: ${file.name} (${fileSizeKB} KB)`,
+                        mediaUrl: reader.result,
+                        type: 'file',
+                        timestamp: Date.now()
+                    });
+                };
             }
             e.target.value = '';
         });
@@ -1133,7 +1143,6 @@
             mediaRecorder.onstop = () => {
                 const blob = new Blob(audioChunks, { type: currentMediaType === 'video' ? 'video/webm' : 'audio/webm' });
                 
-                // Конвертируем в Base64, чтобы медиа гарантированно сохранялось и проигрывалось везде
                 const reader = new FileReader();
                 reader.readAsDataURL(blob);
                 reader.onloadend = function() {
@@ -1294,6 +1303,19 @@
                         };
 
                         box.appendChild(capsule);
+
+                    } else if (msg.type === 'file') {
+                        const div = document.createElement('div');
+                        div.classList.add('msg-bubble');
+                        if (isOutgoing) div.classList.add('outgoing');
+                        div.innerHTML = `
+                            <div>${msg.text}</div>
+                            <div style="margin-top: 6px;">
+                                <a href="${msg.mediaUrl}" download style="color: #e879f9; font-size: 0.85rem; text-decoration: underline;">Скачать файл</a>
+                            </div>
+                            <div style="text-align: right; font-size: 0.7rem; color: #d8b4fe; margin-top: 2px;">${timeStr}</div>
+                        `;
+                        box.appendChild(div);
 
                     } else {
                         const div = document.createElement('div');
