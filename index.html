@@ -37,7 +37,6 @@
             background-color: #000;
         }
 
-        /* Сногсшибательный живой космический фон без сторонних видео и водяных знаков */
         .bg-cosmic {
             position: absolute;
             top: -10%;
@@ -54,15 +53,9 @@
         }
 
         @keyframes cosmicMotion {
-            0% {
-                transform: scale(1) translate(0, 0) rotate(0deg);
-            }
-            50% {
-                transform: scale(1.08) translate(-2%, -3%) rotate(1deg);
-            }
-            100% {
-                transform: scale(1.15) translate(2%, 3%) rotate(-1deg);
-            }
+            0% { transform: scale(1) translate(0, 0) rotate(0deg); }
+            50% { transform: scale(1.08) translate(-2%, -3%) rotate(1deg); }
+            100% { transform: scale(1.15) translate(2%, 3%) rotate(-1deg); }
         }
 
         @media (min-width: 768px) {
@@ -99,7 +92,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(5, 7, 15, 0.55);
+            background: rgba(5, 7, 15, 0.85);
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -131,7 +124,7 @@
             margin-bottom: 16px;
         }
 
-        #authScreen input {
+        #authScreen input, .settings-card input, #searchInput, .chat-input-panel input, .modal-box input {
             width: 100%;
             padding: 14px 18px;
             border-radius: 14px;
@@ -143,12 +136,12 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
 
-        #authScreen input:focus {
+        #authScreen input:focus, .settings-card input:focus, #searchInput:focus, .chat-input-panel input:focus {
             border-color: #c084fc;
             box-shadow: 0 0 18px rgba(192, 132, 252, 0.7);
         }
 
-        #authScreen button {
+        #authScreen button, #saveProfileBtn, #switchAccountBtn, #registerBtn, .modal-box button {
             width: 100%;
             max-width: 320px;
             padding: 14px;
@@ -183,27 +176,13 @@
             align-items: center;
             cursor: pointer;
             transition: background 0.2s;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
 
-        .account-card:hover {
-            background: rgba(20, 30, 50, 0.85);
-        }
+        .account-card:hover { background: rgba(20, 30, 50, 0.85); }
 
-        .account-info {
-            text-align: left;
-        }
-
-        .account-info h4 {
-            font-size: 0.9rem;
-            color: #fff;
-        }
-
-        .account-info p {
-            font-size: 0.75rem;
-            color: #d1d5db;
-            margin: 0;
-        }
+        .account-info { text-align: left; }
+        .account-info h4 { font-size: 0.9rem; color: #fff; }
+        .account-info p { font-size: 0.75rem; color: #d1d5db; margin: 0; }
 
         .header {
             padding: 14px 20px;
@@ -251,11 +230,7 @@
             text-shadow: 0 0 15px rgba(216, 180, 254, 0.9);
         }
 
-        .nav-item svg {
-            width: 22px;
-            height: 22px;
-            fill: currentColor;
-        }
+        .nav-item svg { width: 22px; height: 22px; fill: currentColor; }
 
         .list-container {
             flex: 1;
@@ -280,25 +255,12 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
 
-        .list-item:hover {
-            background: rgba(20, 30, 50, 0.75);
-        }
+        .list-item:hover { background: rgba(20, 30, 50, 0.75); }
 
-        .item-info h4 {
-            font-size: 0.95rem;
-            margin-bottom: 2px;
-            color: #fff;
-        }
+        .item-info h4 { font-size: 0.95rem; margin-bottom: 2px; color: #fff; }
+        .item-info p { font-size: 0.8rem; color: #d1d5db; }
 
-        .item-info p {
-            font-size: 0.8rem;
-            color: #d1d5db;
-        }
-
-        #chatRoomScreen {
-            z-index: 6;
-            background: transparent;
-        }
+        #chatRoomScreen { z-index: 6; background: transparent; }
 
         .chat-messages {
             flex: 1;
@@ -335,13 +297,6 @@
             border-bottom-right-radius: 4px;
         }
 
-        .msg-sender {
-            font-size: 0.7rem;
-            color: #d8b4fe;
-            margin-bottom: 2px;
-            font-weight: bold;
-        }
-
         .chat-input-panel {
             padding: 10px 14px;
             background: rgba(8, 12, 24, 0.75);
@@ -352,16 +307,7 @@
             flex-shrink: 0;
         }
 
-        .chat-input-panel input {
-            flex: 1;
-            padding: 10px 16px;
-            border-radius: 20px;
-            border: 1px solid rgba(168, 85, 247, 0.5);
-            background: rgba(10, 15, 30, 0.8);
-            color: #fff;
-            outline: none;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
-        }
+        .chat-input-panel input { flex: 1; border-radius: 20px; padding: 10px 16px; }
 
         .action-btn {
             background: none;
@@ -369,7 +315,7 @@
             color: #d8b4fe;
             cursor: pointer;
             font-size: 1.2rem;
-            padding: 4px;
+            padding: 6px;
         }
 
         .settings-content {
@@ -390,20 +336,13 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
 
-        .settings-card label {
-            font-size: 0.85rem;
-            color: #d1d5db;
-        }
+        .settings-card label { font-size: 0.85rem; color: #d1d5db; }
 
         .modal {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.65);
             display: none;
             justify-content: center;
@@ -421,30 +360,28 @@
             flex-direction: column;
             gap: 14px;
             text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
         }
     </style>
 </head>
 <body>
 
     <div class="app-container">
-        <!-- ЖИВОЙ КОСМИЧЕСКИЙ ФОН -->
         <div class="bg-cosmic"></div>
         
         <!-- ЭКРАН АВТОРИЗАЦИИ -->
         <div id="authScreen">
             <h2>Cosmic Messenger</h2>
-            <p>Защищенный доступ с динамическим фоном</p>
+            <p>Облачный мессенджер нового поколения</p>
             <div class="auth-inputs">
                 <input type="text" id="regName" placeholder="Ваше имя..." autocomplete="off">
                 <input type="text" id="regUsername" placeholder="Юзернейм (например, @alex)" autocomplete="off">
-                <input type="text" id="regPhone" placeholder="Любой номер или текст (необязательно)" autocomplete="off">
+                <input type="text" id="regPhone" placeholder="Номер телефона" autocomplete="off">
                 <input type="password" id="regPassword" placeholder="Секретный пин-код/пароль" autocomplete="new-password">
             </div>
             <button id="registerBtn" type="button">Создать и войти</button>
             
             <div id="savedAccountsSection" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
-                <p style="margin: 16px 0 6px 0; font-size: 0.8rem; color: #d1d5db;">Ваши сохраненные профили:</p>
+                <p style="margin: 16px 0 6px 0; font-size: 0.8rem; color: #d1d5db;">Сохраненные профили:</p>
                 <div class="accounts-list" id="accountsListContainer"></div>
             </div>
         </div>
@@ -452,47 +389,43 @@
         <!-- ВКЛАДКА 1: ЧАТЫ -->
         <div id="chatsScreen" class="screen active">
             <div class="header">
-                <span>Чаты</span>
+                <span>Чаты и группы</span>
                 <button class="action-btn" id="openGroupModalBtn" title="Создать группу">➕</button>
             </div>
             <div class="list-container" id="chatsList">
                 <div class="list-item" style="cursor: default; background: transparent; border: none; justify-content: center; color: #d1d5db; text-align: center; box-shadow: none;">
-                    Список чатов пуст. Воспользуйтесь поиском.
+                    Список чатов пуст. Найдите собеседника через поиск.
                 </div>
             </div>
         </div>
 
-        <!-- ВКЛАДКА 2: ПОИСК -->
+        <!-- ВКЛАДКА 2: ПОИСК (Имя, юзернейм, телефон) -->
         <div id="searchScreen" class="screen">
-            <div class="header">
-                <span>Поиск людей</span>
-            </div>
+            <div class="header"><span>Поиск людей и групп</span></div>
             <div style="padding: 12px; flex-shrink: 0;">
-                <input type="text" id="searchInput" placeholder="Введите имя или @username..." style="width:100%; padding: 12px; border-radius: 12px; border: 1px solid rgba(168,85,247,0.5); background: rgba(10,15,30,0.8); color:#fff; outline:none; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
+                <input type="text" id="searchInput" placeholder="Имя, @username или номер..." autocomplete="off">
             </div>
             <div class="list-container" id="searchResults"></div>
         </div>
 
         <!-- ВКЛАДКА 3: ПРОФИЛЬ -->
         <div id="profileScreen" class="screen">
-            <div class="header">
-                <span>Мой профиль</span>
-            </div>
+            <div class="header"><span>Мой профиль</span></div>
             <div class="settings-content">
                 <div class="settings-card">
                     <label>Ваше имя</label>
-                    <input type="text" id="editName" style="padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.25); background: rgba(10,15,30,0.8); color:#fff;">
+                    <input type="text" id="editName">
                 </div>
                 <div class="settings-card">
                     <label>Юзернейм</label>
-                    <input type="text" id="editUsername" readonly style="padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(5,7,15,0.5); color:#9ca3af;">
+                    <input type="text" id="editUsername" readonly style="background: rgba(5,7,15,0.5); color:#9ca3af;">
                 </div>
                 <div class="settings-card">
-                    <label>Номер / Значение</label>
-                    <input type="text" id="editPhone" readonly style="padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(5,7,15,0.5); color:#9ca3af;">
+                    <label>Номер телефона</label>
+                    <input type="text" id="editPhone" readonly style="background: rgba(5,7,15,0.5); color:#9ca3af;">
                 </div>
-                <button id="saveProfileBtn" style="padding: 12px; background: linear-gradient(135deg, #a855f7, #7c3aed); border:none; border-radius: 10px; color:#fff; font-weight:bold; cursor:pointer; box-shadow: 0 4px 15px rgba(168,85,247,0.4);">Сохранить</button>
-                <button id="switchAccountBtn" style="padding: 12px; background: rgba(20, 30, 50, 0.85); border:1px solid rgba(255,255,255,0.25); border-radius: 10px; color:#fff; font-weight:bold; cursor:pointer; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">Сменить аккаунт</button>
+                <button id="saveProfileBtn">Сохранить</button>
+                <button id="switchAccountBtn">Сменить аккаунт</button>
             </div>
         </div>
 
@@ -500,13 +433,13 @@
         <div id="chatRoomScreen" class="screen">
             <div class="header">
                 <button class="action-btn" id="closeChatBtn">⬅</button>
-                <span id="activeChatTitle" style="color: #d8b4fe; text-shadow: 0 0 10px rgba(216,180,254,0.8);">Чат</span>
+                <span id="activeChatTitle" style="color: #d8b4fe;">Чат</span>
                 <span></span>
             </div>
             <div class="chat-messages" id="chatMessages"></div>
             <div class="chat-input-panel">
                 <input type="text" id="msgInput" placeholder="Сообщение..." autocomplete="off">
-                <button class="action-btn" id="sendMsgBtn">➤</button>
+                <button class="action-btn" id="sendMsgBtn" title="Отправить">➤</button>
             </div>
         </div>
 
@@ -526,39 +459,58 @@
             </button>
         </div>
 
-        <!-- МОДАЛКА СОЗДАНИЯ ГРУППЫ -->
+        <!-- МОДАЛКА СОЗДАНИЯ И ПРИСОЕДИНЕНИЯ К ГРУППЕ -->
         <div class="modal" id="groupModal">
             <div class="modal-box">
                 <h3 style="color: #d8b4fe;">Создать группу</h3>
-                <input type="text" id="groupNameInput" placeholder="Название группы..." style="padding: 10px; border-radius: 8px; border: 1px solid rgba(168,85,247,0.5); background: rgba(10,15,30,0.9); color:#fff; outline:none;">
-                <button id="createGroupConfirmBtn" style="padding: 10px; background: linear-gradient(135deg, #a855f7, #7c3aed); border:none; border-radius: 8px; color:#fff; font-weight:bold; cursor:pointer; box-shadow: 0 4px 12px rgba(168,85,247,0.4);">Создать</button>
-                <button id="closeGroupModalBtn" style="padding: 10px; background: none; border:none; color:#d1d5db; cursor:pointer;">Отмена</button>
+                <input type="text" id="groupNameInput" placeholder="Название группы..." autocomplete="off">
+                <button id="createGroupConfirmBtn">Создать</button>
+                <button id="closeGroupModalBtn" style="background:none; box-shadow:none; color:#d1d5db;">Отмена</button>
             </div>
         </div>
 
-        <!-- МОДАЛКА ПРОВЕРКИ ПАРОЛЯ ДЛЯ ВХОДА -->
+        <!-- МОДАЛКА ПАРОЛЯ -->
         <div class="modal" id="passwordModal">
             <div class="modal-box">
-                <h3 style="color: #d8b4fe;">Защита аккаунта</h3>
-                <p style="font-size: 0.85rem; color: #d1d5db;" id="passwordPromptText">Введите пароль для профиля</p>
-                <input type="password" id="loginPasswordInput" placeholder="Ваш пароль..." style="padding: 10px; border-radius: 8px; border: 1px solid rgba(168,85,247,0.5); background: rgba(10,15,30,0.9); color:#fff; outline:none;">
-                <button id="confirmLoginBtn" style="padding: 10px; background: linear-gradient(135deg, #a855f7, #7c3aed); border:none; border-radius: 8px; color:#fff; font-weight:bold; cursor:pointer; box-shadow: 0 4px 12px rgba(168,85,247,0.4);">Войти</button>
-                <button id="cancelLoginBtn" style="padding: 10px; background: none; border:none; color:#d1d5db; cursor:pointer;">Отмена</button>
+                <h3 style="color: #d8b4fe;">Защита профиля</h3>
+                <p style="font-size: 0.85rem; color: #d1d5db;" id="passwordPromptText">Введите пароль</p>
+                <input type="password" id="loginPasswordInput" placeholder="Пароль..." autocomplete="current-password">
+                <button id="confirmLoginBtn">Войти</button>
+                <button id="cancelLoginBtn" style="background:none; box-shadow:none; color:#d1d5db;">Отмена</button>
             </div>
         </div>
-
     </div>
 
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
     <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyD076TRQB2Rg1HBGyykB...",
+            authDomain: "geminichat-58c72.firebaseapp.com",
+            databaseURL: "https://geminichat-58c72-default-rtdb.firebaseio.com",
+            projectId: "geminichat-58c72",
+            storageBucket: "geminichat-58c72.appspot.com",
+            messagingSenderId: "815197982634",
+            appId: "1:815197982634:web:3b9c01f8...",
+            measurementId: "G-845NCYG8CL"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
         let myName = localStorage.getItem('g_current_name');
         let myUsername = localStorage.getItem('g_current_username');
         let myPhone = localStorage.getItem('g_current_phone');
         let currentChatId = null;
+        let messageListener = null;
 
         const authScreen = document.getElementById('authScreen');
 
         if (myName && myUsername) {
             authScreen.style.display = 'none';
+            loadUserChats();
         } else {
             authScreen.style.display = 'flex';
             renderSavedAccounts();
@@ -582,13 +534,11 @@
                 card.innerHTML = `
                     <div class="account-info">
                         <h4>🔒 ${acc.name} (${acc.username})</h4>
-                        <p>${acc.phone || 'Без номера'}</p>
+                        <p>${acc.phone || 'Нет номера'}</p>
                     </div>
                     <span style="color: #d8b4fe; font-size: 1.2rem;">➜</span>
                 `;
-                card.onclick = () => {
-                    openPasswordCheckModal(acc);
-                };
+                card.onclick = () => openPasswordCheckModal(acc);
                 container.appendChild(card);
             });
         }
@@ -599,7 +549,7 @@
             const promptText = document.getElementById('passwordPromptText');
             
             input.value = '';
-            promptText.textContent = `Введите пароль для профиля ${acc.username}`;
+            promptText.textContent = `Пароль для ${acc.username}`;
             modal.style.display = 'flex';
             input.focus();
 
@@ -614,10 +564,7 @@
                     alert('Неверный пароль!');
                 }
             };
-
-            document.getElementById('cancelLoginBtn').onclick = function() {
-                modal.style.display = 'none';
-            };
+            document.getElementById('cancelLoginBtn').onclick = () => modal.style.display = 'none';
         }
 
         document.getElementById('registerBtn').onclick = function() {
@@ -627,7 +574,7 @@
             const password = document.getElementById('regPassword').value.trim();
             
             if (!name || !uname || !password) {
-                alert('Заполните обязательные поля (Имя, Юзернейм и Пароль)!');
+                alert('Заполните Имя, Юзернейм и Пароль!');
                 return;
             }
 
@@ -638,19 +585,13 @@
             localStorage.setItem('g_current_phone', phone);
             
             let profiles = JSON.parse(localStorage.getItem('g_saved_profiles') || '[]');
-            const existingIndex = profiles.findIndex(p => p.username === uname);
-            if (existingIndex !== -1) {
-                profiles[existingIndex] = { name, username: uname, phone, password };
-            } else {
-                profiles.push({ name, username: uname, phone, password });
-            }
+            const idx = profiles.findIndex(p => p.username === uname);
+            if (idx !== -1) profiles[idx] = { name, username: uname, phone, password };
+            else profiles.push({ name, username: uname, phone, password });
             localStorage.setItem('g_saved_profiles', JSON.stringify(profiles));
 
-            let users = JSON.parse(localStorage.getItem('g_all_users') || '[]');
-            if (!users.some(u => u.username === uname)) {
-                users.push({ name: name, username: uname, phone: phone });
-                localStorage.setItem('g_all_users', JSON.stringify(users));
-            }
+            // Сохраняем пользователя в Firebase для глобального поиска по имени, юзернейму и телефону
+            db.ref('users/' + uname.replace('@','')).set({ name, username: uname, phone });
 
             location.reload();
         };
@@ -675,6 +616,8 @@
                     document.getElementById('editName').value = myName || '';
                     document.getElementById('editUsername').value = myUsername || '';
                     document.getElementById('editPhone').value = myPhone || '';
+                } else if (target === 'chatsScreen') {
+                    loadUserChats();
                 }
             });
         });
@@ -684,154 +627,209 @@
             if (!newName) return;
             localStorage.setItem('g_current_name', newName);
             myName = newName;
-            
-            let profiles = JSON.parse(localStorage.getItem('g_saved_profiles') || '[]');
-            profiles = profiles.map(p => {
-                if (p.username === myUsername) p.name = newName;
-                return p;
-            });
-            localStorage.setItem('g_saved_profiles', JSON.stringify(profiles));
-
-            alert('Сохранено!');
+            db.ref('users/' + myUsername.replace('@','')).update({ name: newName });
+            alert('Профиль сохранен!');
         });
 
+        // Умный поиск (поиск по имени, юзернейму или телефону в Firebase)
         document.getElementById('searchInput').addEventListener('input', (e) => {
             const query = e.target.value.trim().toLowerCase();
             const resultsBox = document.getElementById('searchResults');
             resultsBox.innerHTML = '';
             if (!query) return;
 
-            let users = JSON.parse(localStorage.getItem('g_all_users') || '[]');
-            if (users.length === 0) {
-                users = [
-                    { name: 'Алексей', username: '@alex', phone: '12345' },
-                    { name: 'Елена', username: '@elena', phone: 'тест' }
-                ];
-            }
+            // Ищем пользователей и группы в базе
+            db.ref('users').once('value', (snapshot) => {
+                const users = snapshot.val() || {};
+                db.ref('groups').once('value', (gSnapshot) => {
+                    const groups = gSnapshot.val() || {};
+                    resultsBox.innerHTML = '';
 
-            const filtered = users.filter(user => 
-                (user.username.toLowerCase().includes(query) || user.name.toLowerCase().includes(query)) && 
-                user.username !== myUsername
-            );
+                    let found = false;
 
-            if (filtered.length === 0) {
-                resultsBox.innerHTML = '<div style="padding: 15px; color: #d1d5db; text-align: center;">Ничего не найдено</div>';
-                return;
-            }
+                    // Поиск среди пользователей по имени, юзернейму или телефону
+                    Object.values(users).forEach(user => {
+                        if (user.username === myUsername) return;
+                        const matchName = user.name.toLowerCase().includes(query);
+                        const matchUname = user.username.toLowerCase().includes(query);
+                        const matchPhone = user.phone && user.phone.toLowerCase().includes(query);
 
-            filtered.forEach(user => {
-                const div = document.createElement('div');
-                div.classList.add('list-item');
-                div.innerHTML = `<div class="item-info"><h4>${user.name} (${user.phone || 'без номера'})</h4><p>${user.username}</p></div>`;
-                div.addEventListener('click', () => openPersonalChat(user));
-                resultsBox.appendChild(div);
+                        if (matchName || matchUname || matchPhone) {
+                            found = true;
+                            const div = document.createElement('div');
+                            div.classList.add('list-item');
+                            div.innerHTML = `<div class="item-info"><h4>👤 ${user.name} (${user.phone || 'без номера'})</h4><p>${user.username}</p></div>`;
+                            div.addEventListener('click', () => openPersonalChat(user));
+                            resultsBox.appendChild(div);
+                        }
+                    });
+
+                    // Поиск среди групп по названию
+                    Object.keys(groups).forEach(gId => {
+                        const group = groups[gId];
+                        if (group.name.toLowerCase().includes(query)) {
+                            found = true;
+                            const div = document.createElement('div');
+                            div.classList.add('list-item');
+                            div.innerHTML = `<div class="item-info"><h4>👥 Группа: ${group.name}</h4><p>Нажмите для вступления</p></div>`;
+                            div.addEventListener('click', () => joinGroupChat(gId, group.name));
+                            resultsBox.appendChild(div);
+                        }
+                    });
+
+                    if (!found) {
+                        resultsBox.innerHTML = '<div style="padding: 15px; color: #d1d5db; text-align: center;">Ничего не найдено</div>';
+                    }
+                });
             });
         });
 
         function openPersonalChat(user) {
             const sorted = [myUsername, user.username].sort();
             currentChatId = 'chat_' + sorted[0].replace('@','') + '_' + sorted[1].replace('@','');
-            document.getElementById('activeChatTitle').textContent = user.name;
             
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById('chatRoomScreen').classList.add('active');
+            // Сохраняем чат в список чатов пользователя
+            db.ref(`user_chats/${myUsername.replace('@','')}/${currentChatId}`).set({
+                title: user.name,
+                type: 'private',
+                id: currentChatId
+            });
+
+            document.getElementById('activeChatTitle').textContent = user.name;
+            switchScreen('chatRoomScreen');
             loadMessages();
         }
 
-        document.getElementById('sendMsgBtn').addEventListener('click', sendMessage);
-        document.getElementById('msgInput').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') sendMessage();
-        });
-function sendMessage() {
-    const textInput = document.getElementById('msgInput');
-    const text = textInput.value.trim();
-    
-    if (!text || !currentChatId) return;
-
-    const messageData = {
-        sender: myName,
-        username: myUsername,
-        text: text,
-        timestamp: Date.now()
-    };
-
-    db.ref('chats/' + currentChatId + '/messages').push(messageData);
-    textInput.value = '';
-}
-
-function loadMessages() {
-    const box = document.getElementById('chatMessagesBox');
-    if (!box) return;
-
-    if (!currentChatId) {
-        box.innerHTML = '<div style="color: gray; text-align: center; margin-top: 20px;">Выберите чат для общения</div>';
-        return;
-    }
-
-    db.ref('chats/' + currentChatId + '/messages').on('value', (snapshot) => {
-        box.innerHTML = '';
-        const data = snapshot.val();
-
-        if (!data) {
-            box.innerHTML = '<div style="color: gray; text-align: center; margin-top: 20px;">Нет сообщений. Напишите первыми!</div>';
-            return;
+        function joinGroupChat(gId, gName) {
+            currentChatId = gId;
+            db.ref(`user_chats/${myUsername.replace('@','')}/${currentChatId}`).set({
+                title: 'Группа: ' + gName,
+                type: 'group',
+                id: currentChatId
+            });
+            document.getElementById('activeChatTitle').textContent = '👥 ' + gName;
+            switchScreen('chatRoomScreen');
+            loadMessages();
         }
 
-        Object.values(data).forEach(msg => {
-            const div = document.createElement('div');
-            div.classList.add('msg-bubble');
-            
-            if (msg.username === myUsername) {
-                div.classList.add('my-message');
+        function switchScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        // Загрузка сохраненных чатов на главный экран
+        function loadUserChats() {
+            const chatsList = document.getElementById('chatsList');
+            db.ref(`user_chats/${myUsername.replace('@','')}`).on('value', (snapshot) => {
+                chatsList.innerHTML = '';
+                const chats = snapshot.val();
+                if (!chats) {
+                    chatsList.innerHTML = '<div style="color: #d1d5db; text-align: center; margin-top: 20px;">Список чатов пуст. Воспользуйтесь поиском.</div>';
+                    return;
+                }
+
+                Object.values(chats).forEach(chat => {
+                    const div = document.createElement('div');
+                    div.classList.add('list-item');
+                    div.innerHTML = `<div class="item-info"><h4>💬 ${chat.title}</h4><p>Открыть переписку</p></div>`;
+                    div.addEventListener('click', () => {
+                        currentChatId = chat.id;
+                        document.getElementById('activeChatTitle').textContent = chat.title;
+                        switchScreen('chatRoomScreen');
+                        loadMessages();
+                    });
+                    chatsList.appendChild(div);
+                });
+            });
+        }
+
+        document.getElementById('sendMsgBtn').addEventListener('click', sendMessage);
+        document.getElementById('msgInput').addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
+
+        function sendMessage() {
+            const textInput = document.getElementById('msgInput');
+            const text = textInput.value.trim();
+            if (!text || !currentChatId) return;
+
+            const messageData = {
+                sender: myName,
+                username: myUsername,
+                text: text,
+                timestamp: Date.now()
+            };
+
+            db.ref('chats/' + currentChatId + '/messages').push(messageData);
+            textInput.value = '';
+        }
+
+        function loadMessages() {
+            const box = document.getElementById('chatMessages');
+            box.innerHTML = '';
+
+            if (messageListener) {
+                db.ref('chats/' + currentChatId + '/messages').off('value', messageListener);
             }
 
-            div.innerHTML = `<strong>${msg.sender}</strong>: ${msg.text}`;
-            box.appendChild(div);
-        });
+            messageListener = db.ref('chats/' + currentChatId + '/messages').on('value', (snapshot) => {
+                box.innerHTML = '';
+                const data = snapshot.val();
 
-        box.scrollTop = box.scrollHeight;
-    });
-}
+                if (!data) {
+                    box.innerHTML = '<div style="color: gray; text-align: center; margin-top: 20px;">Нет сообщений. Напишите первыми!</div>';
+                    return;
+                }
 
+                Object.values(data).forEach(msg => {
+                    const div = document.createElement('div');
+                    div.classList.add('msg-bubble');
+                    
+                    if (msg.username === myUsername) {
+                        div.classList.add('outgoing');
+                    }
+
+                    div.innerHTML = `<div style="font-size: 0.75rem; color: #d8b4fe; font-weight: bold; margin-bottom: 2px;">${msg.sender}</div>${msg.text}`;
+                    box.appendChild(div);
+                });
+
+                box.scrollTop = box.scrollHeight;
+            });
+        }
 
         document.getElementById('closeChatBtn').addEventListener('click', () => {
-            document.getElementById('chatRoomScreen').classList.remove('active');
-            document.getElementById('chatsScreen').classList.add('active');
+            if (messageListener && currentChatId) {
+                db.ref('chats/' + currentChatId + '/messages').off('value', messageListener);
+            }
+            switchScreen('chatsScreen');
+            loadUserChats();
         });
 
+        // Создание группы
         const groupModal = document.getElementById('groupModal');
         document.getElementById('openGroupModalBtn').addEventListener('click', () => groupModal.style.display = 'flex');
         document.getElementById('closeGroupModalBtn').addEventListener('click', () => groupModal.style.display = 'none');
+        
         document.getElementById('createGroupConfirmBtn').addEventListener('click', () => {
             const gName = document.getElementById('groupNameInput').value.trim();
             if (!gName) return;
+            
+            const gId = 'group_' + Date.now();
+            db.ref('groups/' + gId).set({ name: gName, creator: myUsername });
+            
+            // Сразу добавляем создателя в этот групповой чат
+            db.ref(`user_chats/${myUsername.replace('@','')}/${gId}`).set({
+                title: 'Группа: ' + gName,
+                type: 'group',
+                id: gId
+            });
+
             groupModal.style.display = 'none';
             document.getElementById('groupNameInput').value = '';
-            alert('Группа "' + gName + '" создана!');
+            
+            currentChatId = gId;
+            document.getElementById('activeChatTitle').textContent = '👥 ' + gName;
+            switchScreen('chatRoomScreen');
+            loadMessages();
         });
     </script>
-  
-  <!-- Подключаем Firebase -->
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-
-<script>
-  const firebaseConfig = {
-    apiKey: "AIzaSyD076TRQB2Rg1HBGyykB...",
-    authDomain: "geminichat-58c72.firebaseapp.com",
-    databaseURL: "https://geminichat-58c72-default-rtdb.firebaseio.com",
-    projectId: "geminichat-58c72",
-    storageBucket: "geminichat-58c72.appspot.com",
-    messagingSenderId: "815197982634",
-    appId: "1:815197982634:web:3b9c01f8...",
-    measurementId: "G-845NCYG8CL"
-  };
-
-  firebase.initializeApp(firebaseConfig);
-  
-  const db = firebase.database();
-  const messagesRef = db.ref('messages');
-</script>
-
 </body>
 </html>
