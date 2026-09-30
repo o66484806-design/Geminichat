@@ -59,6 +59,44 @@
             }
         }
 
+        /* ВСПЛЫВАЮЩИЕ УВЕДОМЛЕНИЯ ТОСТЫ */
+        #toastContainer {
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 380px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        .toast-msg {
+            background: rgba(23, 3, 56, 0.95);
+            border: 1px solid #c084fc;
+            box-shadow: 0 4px 20px rgba(192, 132, 252, 0.4);
+            padding: 12px 16px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            pointer-events: auto;
+            animation: slideDown 0.3s ease, fadeOut 0.3s ease 3.2s forwards;
+            cursor: pointer;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes fadeOut {
+            to { opacity: 0; transform: translateY(-10px); }
+        }
+
         .screen {
             position: absolute;
             top: 0;
@@ -268,14 +306,20 @@
             border-bottom-right-radius: 4px;
         }
 
-        /* КРУГЛЫЙ ВИДЕО-КРУЖОК КАВЕР КАК НА СКРИНШОТЕ */
+        /* ВИДЕО-КРУЖКИ */
         .video-circle-wrapper {
             display: flex;
             flex-direction: column;
-            align-self: flex-end;
-            align-items: flex-end;
             max-width: 75%;
             margin: 4px 0;
+        }
+        .video-circle-wrapper.outgoing {
+            align-self: flex-end;
+            align-items: flex-end;
+        }
+        .video-circle-wrapper.incoming {
+            align-self: flex-start;
+            align-items: flex-start;
         }
 
         .video-circle-box {
@@ -317,26 +361,29 @@
             color: #d8b4fe;
         }
 
-        .video-meta-right {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        /* КАПСУЛА ГОЛОСОВОГО СООБЩЕНИЯ */
+        /* ГОЛОСОВЫЕ СООБЩЕНИЯ */
         .voice-msg-capsule {
             display: flex;
             align-items: center;
             gap: 12px;
-            background: linear-gradient(135deg, #9333ea, #6b21a8);
-            border: 1px solid rgba(216, 180, 254, 0.4);
             padding: 10px 16px;
             border-radius: 18px;
-            border-bottom-right-radius: 4px;
             max-width: 82%;
-            align-self: flex-end;
             color: #fff;
             box-shadow: 0 4px 15px rgba(147, 51, 234, 0.3);
+            margin: 4px 0;
+        }
+        .voice-msg-capsule.outgoing {
+            background: linear-gradient(135deg, #9333ea, #6b21a8);
+            border: 1px solid rgba(216, 180, 254, 0.4);
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+        .voice-msg-capsule.incoming {
+            background: rgba(46, 16, 101, 0.75);
+            border: 1px solid rgba(168, 85, 247, 0.4);
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
         }
 
         .voice-play-btn {
@@ -383,7 +430,7 @@
             color: rgba(255, 255, 255, 0.85);
         }
 
-        /* НИЖНЯЯ ПАНЕЛЬ ВВОДА КАК НА СКРИНШОТЕ */
+        /* НИЖНЯЯ ПАНЕЛЬ ВВОДА */
         .chat-input-panel {
             padding: 10px 14px;
             background: rgba(23, 3, 56, 0.95);
@@ -491,7 +538,6 @@
             box-shadow: 0 0 30px rgba(168, 85, 247, 0.3);
         }
 
-        /* ПОЛНОЭКРАННЫЙ ПЛЕЕР ВИДЕО-КРУЖКА */
         #videoPlayerModal {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -518,6 +564,9 @@
     <div class="app-container">
         <div class="bg-cosmic"></div>
         
+        <!-- КОНТЕЙНЕР ДЛЯ ВСПЛЫВАЮЩИХ УВЕДОМЛЕНИЙ -->
+        <div id="toastContainer"></div>
+
         <!-- ЭКРАН АВТОРИЗАЦИИ -->
         <div id="authScreen">
             <h2>Cosmic Messenger</h2>
@@ -588,7 +637,6 @@
             </div>
             <div class="chat-messages" id="chatMessages"></div>
             
-            <!-- ПАНЕЛЬ ВВОДА -->
             <div class="chat-input-panel">
                 <button class="input-icon-btn" id="videoBtn" title="Записать видео-кружок">📎</button>
                 <input type="text" id="msgInput" placeholder="Сообщение" autocomplete="off">
@@ -613,7 +661,7 @@
             </button>
         </div>
 
-        <!-- МОДАЛКА ГРУППЫ -->
+        <!-- МОДАЛКИ -->
         <div class="modal" id="groupModal">
             <div class="modal-box">
                 <h3 style="color: #e879f9;">Создать группу</h3>
@@ -623,7 +671,6 @@
             </div>
         </div>
 
-        <!-- МОДАЛКА ПАРОЛЯ -->
         <div class="modal" id="passwordModal">
             <div class="modal-box">
                 <h3 style="color: #e879f9;">Защита профиля</h3>
@@ -634,7 +681,6 @@
             </div>
         </div>
 
-        <!-- МОДАЛКА ЗАПИСИ МЕДИА -->
         <div class="modal" id="mediaModal">
             <div class="modal-box">
                 <h3 id="mediaModalTitle" style="color: #e879f9;">Запись</h3>
@@ -647,7 +693,6 @@
             </div>
         </div>
 
-        <!-- ПОЛНОЭКРАННЫЙ ПЛЕЕР ВИДЕО-КРУЖКА -->
         <div id="videoPlayerModal">
             <video id="fullscreenCircleVideo" playsinline controls autoplay></video>
             <button id="closeVideoPlayerBtn" style="width: auto; padding: 10px 24px; border-radius: 14px; background: rgba(168, 85, 247, 0.4); border: 1px solid #c084fc; color: #fff; cursor: pointer;">Закрыть</button>
@@ -679,6 +724,7 @@
         let currentChatId = null;
         let messageListener = null;
         let userChatsListener = null;
+        let globalChatsNotifRef = null;
 
         function cleanKey(str) {
             if (!str) return 'unknown';
@@ -695,9 +741,50 @@
                 phone: myPhone || ''
             });
             loadUserChats();
+            initGlobalNotifications();
         } else {
             authScreen.style.display = 'flex';
             renderSavedAccounts();
+        }
+
+        // Функция показа красивых всплывающих уведомлений (Toast) в приложении
+        function showInAppNotification(senderName, textPreview) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = 'toast-msg';
+            toast.innerHTML = `
+                <span style="font-size: 1.5rem;">💬</span>
+                <div style="flex:1; overflow:hidden;">
+                    <h5 style="color: #e879f9; font-size: 0.9rem; margin-bottom: 2px;">${senderName}</h5>
+                    <p style="color: #f3e8ff; font-size: 0.8rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin:0;">${textPreview}</p>
+                </div>
+            `;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 3500);
+        }
+
+        // Слушаем глобально новые сообщения по всем чатам пользователя для всплывающих уведомлений
+        function initGlobalNotifications() {
+            const userKey = cleanKey(myUsername);
+            db.ref(`user_chats/${userKey}`).once('value', (snapshot) => {
+                const chats = snapshot.val();
+                if (!chats) return;
+
+                Object.keys(chats).forEach(chatId => {
+                    // Слушаем последние сообщения в каждом чате
+                    db.ref(`chats/${chatId}/messages`).limitToLast(1).on('child_added', (msgSnap) => {
+                        const msg = msgSnap.val();
+                        // Если сообщение не наше и отправлено только что (свежее)
+                        if (msg && msg.username !== myUsername && (Date.now() - msg.timestamp < 10000)) {
+                            // Если мы сейчас не находимся в этом конкретном чате
+                            if (currentChatId !== chatId) {
+                                let previewText = msg.text || (msg.type === 'video' ? '📹 Видео-кружок' : (msg.type === 'voice' ? '🎤 Голосовое сообщение' : 'Медиа файл'));
+                                showInAppNotification(msg.sender || 'Новое сообщение', previewText);
+                            }
+                        }
+                    });
+                });
+            });
         }
 
         function renderSavedAccounts() {
@@ -932,7 +1019,7 @@
             textInput.value = '';
         }
 
-        // ЗАПИСЬ МЕДИА
+        // ЗАПИСЬ МЕДИА (КРУЖКИ И ГОЛОСОВЫЕ)
         let mediaStream = null;
         let mediaRecorder = null;
         let audioChunks = [];
@@ -971,7 +1058,6 @@
                     videoElem.style.display = 'none';
                 }
 
-                // Используем стабильный mimeType для совместимости
                 let options = { mimeType: currentMediaType === 'video' ? 'video/webm;codecs=vp8,opus' : 'audio/webm' };
                 if (!MediaRecorder.isTypeSupported(options.mimeType)) {
                     options = { mimeType: currentMediaType === 'video' ? 'video/webm' : 'audio/ogg' };
@@ -1039,7 +1125,6 @@
             document.getElementById('mediaModal').style.display = 'none';
         };
 
-        // НАДЕЖНЫЙ ВОСПРОИЗВЕДЕНИЯ МЕДИА
         const videoPlayerModal = document.getElementById('videoPlayerModal');
         const fullscreenCircleVideo = document.getElementById('fullscreenCircleVideo');
         document.getElementById('closeVideoPlayerBtn').onclick = () => {
@@ -1052,6 +1137,7 @@
             return date.getHours().toString().padStart(2, '0') + ':' + date.getMinutes().toString().padStart(2, '0');
         }
 
+        // НАДЕЖНЫЙ РЕНДЕР И ВОСПРОИЗВЕДЕНИЕ СООБЩЕНИЙ ДЛЯ ВСЕХ УЧАСТНИКОВ
         function loadMessages() {
             const box = document.getElementById('chatMessages');
             box.innerHTML = '';
@@ -1074,9 +1160,9 @@
                     const timeStr = formatTime(msg.timestamp);
 
                     if (msg.type === 'video') {
-                        // Рендер видео-кружка
+                        // Рендер видео-кружка (исходящий или входящий)
                         const wrapper = document.createElement('div');
-                        wrapper.className = 'video-circle-wrapper';
+                        wrapper.className = 'video-circle-wrapper ' + (isOutgoing ? 'outgoing' : 'incoming');
 
                         const boxElem = document.createElement('div');
                         boxElem.className = 'video-circle-box';
@@ -1103,9 +1189,8 @@
                         const footer = document.createElement('div');
                         footer.className = 'video-circle-footer';
                         footer.innerHTML = `
-                            <span>0:01</span>
+                            <span>Видео</span>
                             <div class="video-meta-right">
-                                <span style="font-size: 0.9rem;">🔇</span>
                                 <span>${timeStr}</span>
                                 <span style="color: #c084fc; font-weight: bold;">✓✓</span>
                             </div>
@@ -1116,9 +1201,9 @@
                         box.appendChild(wrapper);
 
                     } else if (msg.type === 'voice') {
-                        // Рендер голосового сообщения с реальным аудиоэлементом
+                        // Рендер голосового сообщения (исходящий или входящий)
                         const capsule = document.createElement('div');
-                        capsule.className = 'voice-msg-capsule';
+                        capsule.className = 'voice-msg-capsule ' + (isOutgoing ? 'outgoing' : 'incoming');
 
                         const playBtn = document.createElement('button');
                         playBtn.className = 'voice-play-btn';
@@ -1129,7 +1214,7 @@
 
                         const wavesRow = document.createElement('div');
                         wavesRow.className = 'voice-waves-row';
-                        for (let i = 0; i < 22; i++) {
+                        for (let i = 0; i < 20; i++) {
                             const line = document.createElement('div');
                             line.className = 'voice-wave-line';
                             line.style.height = (Math.sin(i * 0.7) * 7 + 12) + 'px';
@@ -1139,7 +1224,7 @@
                         const footerRow = document.createElement('div');
                         footerRow.className = 'voice-footer-row';
                         footerRow.innerHTML = `
-                            <span>0:01</span>
+                            <span>Голосовое</span>
                             <div>
                                 <span>${timeStr}</span>
                                 <span style="font-weight: bold; margin-left: 2px;">✓✓</span>
@@ -1152,7 +1237,6 @@
                         capsule.appendChild(playBtn);
                         capsule.appendChild(infoCol);
 
-                        // Создаем объект аудио из base64
                         const audioElement = new Audio(msg.mediaUrl);
                         
                         playBtn.onclick = () => {
@@ -1211,7 +1295,7 @@
             db.ref(`user_chats/${cleanKey(myUsername)}/${gId}`).set({ title: 'Группа: ' + gName, type: 'group', id: gId });
 
             groupModal.style.display = 'none';
-            document.getElementById('groupNameInput').value = '';
+            document.getElementById('groupNameInput'].value = '';
             
             currentChatId = gId;
             document.getElementById('activeChatTitle').textContent = '👥 ' + gName;
