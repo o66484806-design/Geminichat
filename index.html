@@ -91,7 +91,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(5, 7, 15, 0.9);
+            background: rgba(5, 7, 15, 0.95);
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -294,17 +294,6 @@
             border-bottom-right-radius: 4px;
         }
 
-        /* Стиль для видео-кружков в чате */
-        .video-circle-msg {
-            width: 140px;
-            height: 140px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid #d8b4fe;
-            box-shadow: 0 0 15px rgba(168, 85, 247, 0.6);
-            background: #000;
-        }
-
         .chat-input-panel {
             padding: 10px 14px;
             background: rgba(8, 12, 24, 0.85);
@@ -492,7 +481,7 @@
         <!-- МОДАЛКА ЗАПИСИ КРУЖКА / ГОЛОСОВОГО -->
         <div class="modal" id="mediaModal">
             <div class="modal-box">
-                <h3 style="color: #d8b4fe;" id="mediaModalTitle">Запись контента</h3>
+                <h3 style="color: #d8b4fe;">Запись кружка / голосового</h3>
                 <div id="mediaPreviewContainer" style="display:flex; justify-content:center; align-items:center; margin: 10px 0;">
                     <video id="mediaPreviewVideo" autoplay muted playsinline style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 2px solid #d8b4fe; display:none;"></video>
                 </div>
@@ -589,8 +578,8 @@
             document.getElementById('cancelLoginBtn').onclick = () => modal.style.display = 'none';
         }
 
-        // ОБРАБОТЧИК КНОПКИ РЕГИСТРАЦИИ
-        document.getElementById('registerBtn').onclick = function() {
+        // ЖЕСТКАЯ ПРИВЯЗКА КНОПКИ РЕГИСТРАЦИИ
+        document.getElementById('registerBtn').addEventListener('click', function() {
             const name = document.getElementById('regName').value.trim();
             let uname = document.getElementById('regUsername').value.trim();
             const phone = document.getElementById('regPhone').value.trim();
@@ -618,7 +607,7 @@
             } catch(e) {}
 
             location.reload();
-        };
+        });
 
         document.getElementById('switchAccountBtn').addEventListener('click', () => {
             localStorage.removeItem('g_current_name');
@@ -657,7 +646,7 @@
             alert('Профиль сохранен!');
         });
 
-        // Поиск по имени, юзернейму или номеру телефона
+        // ПОИСК ПО ИМЕНИ, ЮЗЕРНЕЙМУ И НОМЕРУ ТЕЛЕФОНА
         document.getElementById('searchInput').addEventListener('input', (e) => {
             const query = e.target.value.trim().toLowerCase();
             const resultsBox = document.getElementById('searchResults');
@@ -723,10 +712,10 @@
 
         function joinGroupChat(gId, gName) {
             currentChatId = gId;
-            db.ref(`user_chats/${myUsername.replace(/[@.]/g, '_')}/${currentChatId}`).set({
+            db.ref(`user_chats/${myUsername.replace(/[@.]/g, '_')}/${gId}`).set({
                 title: 'Группа: ' + gName,
                 type: 'group',
-                id: currentChatId
+                id: gId
             });
             document.getElementById('activeChatTitle').textContent = '👥 ' + gName;
             switchScreen('chatRoomScreen');
@@ -783,7 +772,7 @@
             textInput.value = '';
         }
 
-        // РАБОТА С КРУЖКАМИ И ГОЛОСОВЫМИ СООБЩЕНИЯМИ
+        // КРУЖКИ И ГОЛОСОВЫЕ СООБЩЕНИЯ
         let mediaStream = null;
         let mediaTimerInterval = null;
         let secondsElapsed = 0;
@@ -802,7 +791,6 @@
                 videoElem.srcObject = mediaStream;
                 videoElem.style.display = 'block';
             } catch (err) {
-                // Если нет камеры, разрешаем записать хотя бы голосовое
                 try {
                     mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
                     videoElem.style.display = 'none';
@@ -826,11 +814,10 @@
             }
             document.getElementById('mediaModal').style.display = 'none';
 
-            // Имитация отправки кружка/голосового в чат
             const messageData = {
                 sender: myName,
                 username: myUsername,
-                text: `🎤 Голосовое сообщение (${secondsElapsed} сек)`,
+                text: `🎤 Голосовое сообщение / Кружок (${secondsElapsed} сек)`,
                 type: 'audio',
                 timestamp: Date.now()
             };
