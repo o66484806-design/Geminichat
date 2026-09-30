@@ -516,11 +516,18 @@
         let myPhone = localStorage.getItem('g_current_phone');
         let currentChatId = null;
         let messageListener = null;
+        let userChatsListener = null;
 
         const authScreen = document.getElementById('authScreen');
 
         if (myName && myUsername) {
             authScreen.style.display = 'none';
+            // Гарантируем регистрацию юзера в базе при старте
+            db.ref('users/' + myUsername.replace(/[@.]/g, '_')).set({
+                name: myName,
+                username: myUsername,
+                phone: myPhone || ''
+            });
             loadUserChats();
         } else {
             authScreen.style.display = 'flex';
@@ -601,9 +608,7 @@
             else profiles.push({ name, username: uname, phone, password });
             localStorage.setItem('g_saved_profiles', JSON.stringify(profiles));
 
-            try {
-                db.ref('users/' + uname.replace(/[@.]/g, '_')).set({ name, username: uname, phone });
-            } catch(e) {}
+            db.ref('users/' + uname.replace(/[@.]/g, '_')).set({ name, username: uname, phone });
 
             location.reload();
         });
@@ -639,9 +644,7 @@
             if (!newName) return;
             localStorage.setItem('g_current_name', newName);
             myName = newName;
-            try {
-                db.ref('users/' + myUsername.replace(/[@.]/g, '_')).update({ name: newName });
-            } catch(e) {}
+            db.ref('users/' + myUsername.replace(/[@.]/g, '_')).update({ name: newName });
             alert('Профиль сохранен!');
         });
 
@@ -698,10 +701,10 @@
             const sorted = [myUsername, user.username].sort();
             currentChatId = 'chat_' + sorted[0].replace(/[@.]/g, '_') + '_' + sorted[1].replace(/[@.]/g, '_');
             
-            // Регистрируем чат для обоих участников во избежании рассинхрона
             const myKey = myUsername.replace(/[@.]/g, '_');
             const targetKey = user.username.replace(/[@.]/g, '_');
 
+            // Записываем чат обоим пользователям с правильными именами собеседников
             db.ref(`user_chats/${myKey}/${currentChatId}`).set({
                 title: user.name,
                 type: 'private',
@@ -738,7 +741,13 @@
 
         function loadUserChats() {
             const chatsList = document.getElementById('chatsList');
-            db.ref(`user_chats/${myUsername.replace(/[@.]/g, '_')}`).on('value', (snapshot) => {
+            const userKey = myUsername.replace(/[@.]/g, '_');
+
+            if (userChatsListener) {
+                db.ref(`user_chats/${userKey}`).off('value', userChatsListener);
+            }
+
+            userChatsListener = db.ref(`user_chats/${userKey}`).on('value', (snapshot) => {
                 chatsList.innerHTML = '';
                 const chats = snapshot.val();
                 if (!chats) {
