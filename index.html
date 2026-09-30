@@ -578,7 +578,6 @@
             document.getElementById('cancelLoginBtn').onclick = () => modal.style.display = 'none';
         }
 
-        // ЖЕСТКАЯ ПРИВЯЗКА КНОПКИ РЕГИСТРАЦИИ
         document.getElementById('registerBtn').addEventListener('click', function() {
             const name = document.getElementById('regName').value.trim();
             let uname = document.getElementById('regUsername').value.trim();
@@ -699,8 +698,18 @@
             const sorted = [myUsername, user.username].sort();
             currentChatId = 'chat_' + sorted[0].replace(/[@.]/g, '_') + '_' + sorted[1].replace(/[@.]/g, '_');
             
-            db.ref(`user_chats/${myUsername.replace(/[@.]/g, '_')}/${currentChatId}`).set({
+            // Регистрируем чат для обоих участников во избежании рассинхрона
+            const myKey = myUsername.replace(/[@.]/g, '_');
+            const targetKey = user.username.replace(/[@.]/g, '_');
+
+            db.ref(`user_chats/${myKey}/${currentChatId}`).set({
                 title: user.name,
+                type: 'private',
+                id: currentChatId
+            });
+
+            db.ref(`user_chats/${targetKey}/${currentChatId}`).set({
+                title: myName,
                 type: 'private',
                 id: currentChatId
             });
