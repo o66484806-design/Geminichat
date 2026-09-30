@@ -368,7 +368,7 @@
     <div class="app-container">
         <div class="bg-cosmic"></div>
         
-        <!-- ЭКРАН АВТОРИЗАЦИИ -->
+        <!-- ЭКРАН АВТОРИЗАЦИИ И РЕГИСТРАЦИИ -->
         <div id="authScreen">
             <h2>Cosmic Messenger</h2>
             <p>Облачный мессенджер нового поколения</p>
@@ -380,7 +380,7 @@
             </div>
             <button id="registerBtn" type="button">Создать и войти</button>
             
-            <div id="savedAccountsSection" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+            <div id="savedAccountsSection" style="width: 100%; display: flex; flex-direction: column; align-items: center; display: none;">
                 <p style="margin: 16px 0 6px 0; font-size: 0.8rem; color: #d1d5db;">Сохраненные профили:</p>
                 <div class="accounts-list" id="accountsListContainer"></div>
             </div>
@@ -438,6 +438,7 @@
             </div>
             <div class="chat-messages" id="chatMessages"></div>
             <div class="chat-input-panel">
+                <button class="action-btn" id="mediaBtn" title="Медиа/Кружок">⏺</button>
                 <input type="text" id="msgInput" placeholder="Сообщение..." autocomplete="off">
                 <button class="action-btn" id="sendMsgBtn" title="Отправить">➤</button>
             </div>
@@ -567,6 +568,7 @@
             document.getElementById('cancelLoginBtn').onclick = () => modal.style.display = 'none';
         }
 
+        // ОБРАБОТЧИК КНОПКИ РЕГИСТРАЦИИ (ВОССТАНОВЛЕН)
         document.getElementById('registerBtn').onclick = function() {
             const name = document.getElementById('regName').value.trim();
             let uname = document.getElementById('regUsername').value.trim();
@@ -580,7 +582,6 @@
 
             if (!uname.startsWith('@')) uname = '@' + uname;
 
-            // Надежное сохранение аккаунта локально
             localStorage.setItem('g_current_name', name);
             localStorage.setItem('g_current_username', uname);
             localStorage.setItem('g_current_phone', phone);
@@ -591,12 +592,9 @@
             else profiles.push({ name, username: uname, phone, password });
             localStorage.setItem('g_saved_profiles', JSON.stringify(profiles));
 
-            // Отправка в Firebase в фоновом режиме (безопасно для блокировок правил)
             try {
                 db.ref('users/' + uname.replace(/[@.]/g, '_')).set({ name, username: uname, phone });
-            } catch(e) {
-                console.log('Firebase sync info:', e);
-            }
+            } catch(e) {}
 
             location.reload();
         };
@@ -638,7 +636,7 @@
             alert('Профиль сохранен!');
         });
 
-        // Поиск пользователей и групп в базе
+        // Поиск по имени, юзернейму или номеру телефона
         document.getElementById('searchInput').addEventListener('input', (e) => {
             const query = e.target.value.trim().toLowerCase();
             const resultsBox = document.getElementById('searchResults');
@@ -746,6 +744,11 @@
 
         document.getElementById('sendMsgBtn').addEventListener('click', sendMessage);
         document.getElementById('msgInput').addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
+        
+        // Кнопка для кружков и медиа (заготовка под запись/отправку)
+        document.getElementById('mediaBtn').addEventListener('click', () => {
+            alert('Функция записи видео-кружков и голосовых активируется здесь!');
+        });
 
         function sendMessage() {
             const textInput = document.getElementById('msgInput');
