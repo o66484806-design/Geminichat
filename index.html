@@ -59,7 +59,6 @@
             }
         }
 
-        /* ВСПЛЫВАЮЩИЕ УВЕДОМЛЕНИЯ ТОСТЫ */
         #toastContainer {
             position: absolute;
             top: 15px;
@@ -430,7 +429,6 @@
             color: rgba(255, 255, 255, 0.85);
         }
 
-        /* НИЖНЯЯ ПАНЕЛЬ ВВОДА */
         .chat-input-panel {
             padding: 10px 14px;
             background: rgba(23, 3, 56, 0.95);
@@ -564,7 +562,6 @@
     <div class="app-container">
         <div class="bg-cosmic"></div>
         
-        <!-- КОНТЕЙНЕР ДЛЯ ВСПЛЫВАЮЩИХ УВЕДОМЛЕНИЙ -->
         <div id="toastContainer"></div>
 
         <!-- ЭКРАН АВТОРИЗАЦИИ -->
@@ -681,10 +678,14 @@
             </div>
         </div>
 
+        <!-- МОДАЛКА ЗАПИСИ МЕДИА С КНОПКОЙ ПЕРЕКЛЮЧЕНИЯ КАМЕРЫ -->
         <div class="modal" id="mediaModal">
             <div class="modal-box">
-                <h3 id="mediaModalTitle" style="color: #e879f9;">Запись</h3>
-                <div style="display:flex; justify-content:center; align-items:center; margin: 10px 0;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h3 id="mediaModalTitle" style="color: #e879f9; font-size: 1.1rem;">Запись</h3>
+                    <button id="flipCameraBtn" title="Перевернуть камеру" style="display: none; background: rgba(168,85,247,0.3); border: 1px solid #c084fc; width: 36px; height: 36px; border-radius: 50%; font-size: 1rem; cursor: pointer; padding:0; box-shadow:none;">🔄</button>
+                </div>
+                <div style="display:flex; justify-content:center; align-items:center; margin: 6px 0;">
                     <video id="mediaPreviewVideo" autoplay muted playsinline style="width: 140px; height: 140px; border-radius: 50%; object-fit: cover; border: 3px solid #c084fc; display:none;"></video>
                 </div>
                 <p id="recordingTimer" style="font-size: 1.2rem; color: #f472b6; font-weight: bold;">00:00</p>
@@ -1013,27 +1014,38 @@
             textInput.value = '';
         }
 
-        // ЗАПИСЬ МЕДИА ЧЕРЕЗ ОБЪЕКТНЫЕ ССЫЛКИ (URL.createObjectURL)
+        // РАБОТА С МЕДИА И ПЕРЕКЛЮЧЕНИЕМ КАМЕРЫ (С ОДНОКРАТНЫМ ЗАПРОСОМ РАЗРЕШЕНИЙ)
         let mediaStream = null;
         let mediaRecorder = null;
         let audioChunks = [];
         let mediaTimerInterval = null;
         let secondsElapsed = 0;
         let currentMediaType = 'voice';
+        let currentFacingMode = 'user'; // 'user' (фронтальная) или 'environment' (основная)
+        let hasMediaPermissionGranted = false;
 
         document.getElementById('voiceBtn').addEventListener('click', async () => {
             currentMediaType = 'voice';
             document.getElementById('mediaModalTitle').textContent = 'Запись голосового';
-            await startRecording({ audio: true });
+            document.getElementById('flipCameraBtn').style.display = 'none';
+            await startRecording();
         });
 
         document.getElementById('videoBtn').addEventListener('click', async () => {
             currentMediaType = 'video';
             document.getElementById('mediaModalTitle').textContent = 'Видео-кружок';
-            await startRecording({ video: { width: 320, height: 320 }, audio: true });
+            document.getElementById('flipCameraBtn').style.display = 'flex';
+            await startRecording();
         });
 
-        async function startRecording(constraints) {
+        document.getElementById('flipCameraBtn').addEventListener('click', async () => {
+            if (currentMediaType !== 'video') return;
+            currentFacingMode = (currentFacingMode === 'user') ? 'environment' : 'user';
+            // Перезапускаем поток с новым направлением камеры без повторного запроса разрешений
+            await startRecording();
+        });
+
+        async function startRecording() {
             const modal = document.getElementById('mediaModal');
             const videoElem = document.getElementById('mediaPreviewVideo');
             const timerElem = document.getElementById('recordingTimer');
@@ -1043,9 +1055,21 @@
             timerElem.textContent = "00:00";
             audioChunks = [];
 
+            // Если старый поток активен — гасим его дорожки перед переключением
+            if (mediaStream) {
+                mediaStream.getTracks().forEach(track => track.stop());
+            }
+
             try {
+                let constraints = {
+                    audio: true,
+                    video: (currentMediaType === 'video') ? { width: 320, height: 320, facingMode: currentFacingMode } : false
+                };
+
                 mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
-                if (constraints.video) {
+                hasMediaPermissionGranted = true; // Разрешение получено, больше браузер не будет спрашивать повторно при переключении камеры
+
+                if (currentMediaType === 'video') {
                     videoElem.srcObject = mediaStream;
                     videoElem.style.display = 'block';
                 } else {
@@ -1066,29 +1090,32 @@
                 };
 
                 mediaRecorder.start();
+
+                // Запускаем таймер заново, если он не шел
+                clearInterval(mediaTimerInterval);
+                mediaTimerInterval = setInterval(() => {
+                    secondsElapsed++;
+                    let mins = Math.floor(secondsElapsed / 60).toString().padStart(2, '0');
+                    let secs = (secondsElapsed % 60).toString().padStart(2, '0');
+                    timerElem.textContent = `${mins}:${secs}`;
+                }, 1000);
+
             } catch (err) {
                 alert('Ошибка доступа к микрофону или камере!');
                 modal.style.display = 'none';
+                hasMediaPermissionGranted = false;
                 return;
             }
-
-            mediaTimerInterval = setInterval(() => {
-                secondsElapsed++;
-                let mins = Math.floor(secondsElapsed / 60).toString().padStart(2, '0');
-                let secs = (secondsElapsed % 60).toString().padStart(2, '0');
-                timerElem.textContent = `${mins}:${secs}`;
-            }, 1000);
         }
 
         document.getElementById('stopAndSendMediaBtn').onclick = function() {
             clearInterval(mediaTimerInterval);
             document.getElementById('mediaModal').style.display = 'none';
 
-            if (!mediaRecorder) return;
+            if (!mediaRecorder || mediaRecorder.state === 'inactive') return;
 
             mediaRecorder.onstop = () => {
                 const blob = new Blob(audioChunks, { type: currentMediaType === 'video' ? 'video/webm' : 'audio/webm' });
-                // Создаем мгновенную прямую объектную ссылку в памяти браузера
                 const objectUrl = URL.createObjectURL(blob);
 
                 db.ref('chats/' + currentChatId + '/messages').push({
