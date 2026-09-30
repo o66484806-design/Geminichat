@@ -459,7 +459,7 @@
             </button>
         </div>
 
-        <!-- МОДАЛКА СОЗДАНИЯ И ПРИСОЕДИНЕНИЯ К ГРУППЕ -->
+        <!-- МОДАЛКА СОЗДАНИЯ ГРУППЫ -->
         <div class="modal" id="groupModal">
             <div class="modal-box">
                 <h3 style="color: #d8b4fe;">Создать группу</h3>
@@ -580,6 +580,7 @@
 
             if (!uname.startsWith('@')) uname = '@' + uname;
 
+            // Надежное сохранение аккаунта локально
             localStorage.setItem('g_current_name', name);
             localStorage.setItem('g_current_username', uname);
             localStorage.setItem('g_current_phone', phone);
@@ -590,8 +591,12 @@
             else profiles.push({ name, username: uname, phone, password });
             localStorage.setItem('g_saved_profiles', JSON.stringify(profiles));
 
-            // Сохраняем пользователя в Firebase для глобального поиска по имени, юзернейму и телефону
-            db.ref('users/' + uname.replace('@','')).set({ name, username: uname, phone });
+            // Отправка в Firebase в фоновом режиме (безопасно для блокировок правил)
+            try {
+                db.ref('users/' + uname.replace(/[@.]/g, '_')).set({ name, username: uname, phone });
+            } catch(e) {
+                console.log('Firebase sync info:', e);
+            }
 
             location.reload();
         };
@@ -627,31 +632,30 @@
             if (!newName) return;
             localStorage.setItem('g_current_name', newName);
             myName = newName;
-            db.ref('users/' + myUsername.replace('@','')).update({ name: newName });
+            try {
+                db.ref('users/' + myUsername.replace(/[@.]/g, '_')).update({ name: newName });
+            } catch(e) {}
             alert('Профиль сохранен!');
         });
 
-        // Умный поиск (поиск по имени, юзернейму или телефону в Firebase)
+        // Поиск пользователей и групп в базе
         document.getElementById('searchInput').addEventListener('input', (e) => {
             const query = e.target.value.trim().toLowerCase();
             const resultsBox = document.getElementById('searchResults');
             resultsBox.innerHTML = '';
             if (!query) return;
 
-            // Ищем пользователей и группы в базе
             db.ref('users').once('value', (snapshot) => {
                 const users = snapshot.val() || {};
                 db.ref('groups').once('value', (gSnapshot) => {
                     const groups = gSnapshot.val() || {};
                     resultsBox.innerHTML = '';
-
                     let found = false;
 
-                    // Поиск среди пользователей по имени, юзернейму или телефону
                     Object.values(users).forEach(user => {
                         if (user.username === myUsername) return;
-                        const matchName = user.name.toLowerCase().includes(query);
-                        const matchUname = user.username.toLowerCase().includes(query);
+                        const matchName = user.name && user.name.toLowerCase().includes(query);
+                        const matchUname = user.username && user.username.toLowerCase().includes(query);
                         const matchPhone = user.phone && user.phone.toLowerCase().includes(query);
 
                         if (matchName || matchUname || matchPhone) {
@@ -664,10 +668,9 @@
                         }
                     });
 
-                    // Поиск среди групп по названию
                     Object.keys(groups).forEach(gId => {
                         const group = groups[gId];
-                        if (group.name.toLowerCase().includes(query)) {
+                        if (group.name && group.name.toLowerCase().includes(query)) {
                             found = true;
                             const div = document.createElement('div');
                             div.classList.add('list-item');
@@ -686,10 +689,9 @@
 
         function openPersonalChat(user) {
             const sorted = [myUsername, user.username].sort();
-            currentChatId = 'chat_' + sorted[0].replace('@','') + '_' + sorted[1].replace('@','');
+            currentChatId = 'chat_' + sorted[0].replace(/[@.]/g, '_') + '_' + sorted[1].replace(/[@.]/g, '_');
             
-            // Сохраняем чат в список чатов пользователя
-            db.ref(`user_chats/${myUsername.replace('@','')}/${currentChatId}`).set({
+            db.ref(`user_chats/${myUsername.replace(/[@.]/g, '_')}/${currentChatId}`).set({
                 title: user.name,
                 type: 'private',
                 id: currentChatId
@@ -702,7 +704,7 @@
 
         function joinGroupChat(gId, gName) {
             currentChatId = gId;
-            db.ref(`user_chats/${myUsername.replace('@','')}/${currentChatId}`).set({
+            db.ref(`user_chats/${myUsername.replace(/[@.]/g, '_')}/${currentChatId}`).set({
                 title: 'Группа: ' + gName,
                 type: 'group',
                 id: currentChatId
@@ -717,10 +719,9 @@
             document.getElementById(screenId).classList.add('active');
         }
 
-        // Загрузка сохраненных чатов на главный экран
         function loadUserChats() {
             const chatsList = document.getElementById('chatsList');
-            db.ref(`user_chats/${myUsername.replace('@','')}`).on('value', (snapshot) => {
+            db.ref(`user_chats/${myUsername.replace(/[@.]/g, '_')}`).on('value', (snapshot) => {
                 chatsList.innerHTML = '';
                 const chats = snapshot.val();
                 if (!chats) {
@@ -803,7 +804,6 @@
             loadUserChats();
         });
 
-        // Создание группы
         const groupModal = document.getElementById('groupModal');
         document.getElementById('openGroupModalBtn').addEventListener('click', () => groupModal.style.display = 'flex');
         document.getElementById('closeGroupModalBtn').addEventListener('click', () => groupModal.style.display = 'none');
@@ -815,8 +815,7 @@
             const gId = 'group_' + Date.now();
             db.ref('groups/' + gId).set({ name: gName, creator: myUsername });
             
-            // Сразу добавляем создателя в этот групповой чат
-            db.ref(`user_chats/${myUsername.replace('@','')}/${gId}`).set({
+            db.ref(`user_chats/${myUsername.replace(/[@.]/g, '_')}/${gId}`).set({
                 title: 'Группа: ' + gName,
                 type: 'group',
                 id: gId
