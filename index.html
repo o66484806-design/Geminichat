@@ -22,8 +22,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow-x: hidden;
-            overflow-y: auto; 
+            overflow: hidden;
         }
 
         .app-container {
@@ -78,7 +77,7 @@
             height: calc(100% - 65px);
             display: none;
             flex-direction: column;
-            background: rgba(5, 7, 15, 0.35);
+            background: rgba(5, 7, 15, 0.4);
             z-index: 5;
         }
 
@@ -92,13 +91,13 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(5, 7, 15, 0.85);
+            background: rgba(5, 7, 15, 0.9);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             padding: 30px 24px;
-            z-index: 20;
+            z-index: 30;
             text-align: center;
             overflow-y: auto;
         }
@@ -129,7 +128,7 @@
             padding: 14px 18px;
             border-radius: 14px;
             border: 1px solid rgba(168, 85, 247, 0.6);
-            background: rgba(10, 15, 30, 0.75);
+            background: rgba(10, 15, 30, 0.8);
             color: #fff;
             font-size: 1rem;
             outline: none;
@@ -162,12 +161,12 @@
             display: flex;
             flex-direction: column;
             gap: 8px;
-            max-height: 150px;
+            max-height: 160px;
             overflow-y: auto;
         }
 
         .account-card {
-            background: rgba(10, 15, 30, 0.75);
+            background: rgba(10, 15, 30, 0.8);
             padding: 10px 14px;
             border-radius: 12px;
             border: 1px solid rgba(255, 255, 255, 0.25);
@@ -178,15 +177,14 @@
             transition: background 0.2s;
         }
 
-        .account-card:hover { background: rgba(20, 30, 50, 0.85); }
-
+        .account-card:hover { background: rgba(20, 30, 50, 0.9); }
         .account-info { text-align: left; }
         .account-info h4 { font-size: 0.9rem; color: #fff; }
         .account-info p { font-size: 0.75rem; color: #d1d5db; margin: 0; }
 
         .header {
             padding: 14px 20px;
-            background: rgba(10, 15, 30, 0.65);
+            background: rgba(10, 15, 30, 0.7);
             border-bottom: 1px solid rgba(168, 85, 247, 0.3);
             display: flex;
             align-items: center;
@@ -203,7 +201,7 @@
             left: 0;
             width: 100%;
             height: 65px;
-            background: rgba(8, 12, 24, 0.75);
+            background: rgba(8, 12, 24, 0.85);
             border-top: 1px solid rgba(168, 85, 247, 0.3);
             display: flex;
             justify-content: space-around;
@@ -243,7 +241,7 @@
         }
 
         .list-item {
-            background: rgba(10, 15, 30, 0.65);
+            background: rgba(10, 15, 30, 0.7);
             padding: 12px 16px;
             border-radius: 14px;
             border: 1px solid rgba(255, 255, 255, 0.2);
@@ -255,7 +253,7 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
 
-        .list-item:hover { background: rgba(20, 30, 50, 0.75); }
+        .list-item:hover { background: rgba(20, 30, 50, 0.8); }
 
         .item-info h4 { font-size: 0.95rem; margin-bottom: 2px; color: #fff; }
         .item-info p { font-size: 0.8rem; color: #d1d5db; }
@@ -270,7 +268,6 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
-            background: rgba(5, 7, 15, 0.1);
         }
 
         .msg-bubble {
@@ -297,9 +294,20 @@
             border-bottom-right-radius: 4px;
         }
 
+        /* Стиль для видео-кружков в чате */
+        .video-circle-msg {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #d8b4fe;
+            box-shadow: 0 0 15px rgba(168, 85, 247, 0.6);
+            background: #000;
+        }
+
         .chat-input-panel {
             padding: 10px 14px;
-            background: rgba(8, 12, 24, 0.75);
+            background: rgba(8, 12, 24, 0.85);
             border-top: 1px solid rgba(168, 85, 247, 0.3);
             display: flex;
             align-items: center;
@@ -329,7 +337,7 @@
         }
 
         .settings-card {
-            background: rgba(10, 15, 30, 0.65);
+            background: rgba(10, 15, 30, 0.7);
             border: 1px solid rgba(255, 255, 255, 0.2);
             padding: 16px;
             border-radius: 16px;
@@ -343,14 +351,14 @@
         .modal {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.65);
+            background: rgba(0,0,0,0.7);
             display: none;
             justify-content: center;
             align-items: center;
-            z-index: 30;
+            z-index: 40;
         }
         .modal-box {
-            background: rgba(10, 15, 30, 0.92);
+            background: rgba(10, 15, 30, 0.95);
             border: 1px solid rgba(168, 85, 247, 0.6);
             padding: 24px;
             border-radius: 20px;
@@ -368,7 +376,7 @@
     <div class="app-container">
         <div class="bg-cosmic"></div>
         
-        <!-- ЭКРАН АВТОРИЗАЦИИ И РЕГИСТРАЦИИ -->
+        <!-- ЭКРАН АВТОРИЗАЦИИ / РЕГИСТРАЦИИ -->
         <div id="authScreen">
             <h2>Cosmic Messenger</h2>
             <p>Облачный мессенджер нового поколения</p>
@@ -438,7 +446,7 @@
             </div>
             <div class="chat-messages" id="chatMessages"></div>
             <div class="chat-input-panel">
-                <button class="action-btn" id="mediaBtn" title="Медиа/Кружок">⏺</button>
+                <button class="action-btn" id="mediaBtn" title="Записать кружок или голосовое">⏺</button>
                 <input type="text" id="msgInput" placeholder="Сообщение..." autocomplete="off">
                 <button class="action-btn" id="sendMsgBtn" title="Отправить">➤</button>
             </div>
@@ -478,6 +486,19 @@
                 <input type="password" id="loginPasswordInput" placeholder="Пароль..." autocomplete="current-password">
                 <button id="confirmLoginBtn">Войти</button>
                 <button id="cancelLoginBtn" style="background:none; box-shadow:none; color:#d1d5db;">Отмена</button>
+            </div>
+        </div>
+
+        <!-- МОДАЛКА ЗАПИСИ КРУЖКА / ГОЛОСОВОГО -->
+        <div class="modal" id="mediaModal">
+            <div class="modal-box">
+                <h3 style="color: #d8b4fe;" id="mediaModalTitle">Запись контента</h3>
+                <div id="mediaPreviewContainer" style="display:flex; justify-content:center; align-items:center; margin: 10px 0;">
+                    <video id="mediaPreviewVideo" autoplay muted playsinline style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 2px solid #d8b4fe; display:none;"></video>
+                </div>
+                <p id="recordingTimer" style="font-size: 1.1rem; color: #f87171; font-weight: bold;">00:00</p>
+                <button id="stopAndSendMediaBtn" style="background: #ef4444; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.6);">Остановить и отправить</button>
+                <button id="cancelMediaBtn" style="background:none; box-shadow:none; color:#d1d5db;">Отмена</button>
             </div>
         </div>
     </div>
@@ -568,7 +589,7 @@
             document.getElementById('cancelLoginBtn').onclick = () => modal.style.display = 'none';
         }
 
-        // ОБРАБОТЧИК КНОПКИ РЕГИСТРАЦИИ (ВОССТАНОВЛЕН)
+        // ОБРАБОТЧИК КНОПКИ РЕГИСТРАЦИИ
         document.getElementById('registerBtn').onclick = function() {
             const name = document.getElementById('regName').value.trim();
             let uname = document.getElementById('regUsername').value.trim();
@@ -744,11 +765,6 @@
 
         document.getElementById('sendMsgBtn').addEventListener('click', sendMessage);
         document.getElementById('msgInput').addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
-        
-        // Кнопка для кружков и медиа (заготовка под запись/отправку)
-        document.getElementById('mediaBtn').addEventListener('click', () => {
-            alert('Функция записи видео-кружков и голосовых активируется здесь!');
-        });
 
         function sendMessage() {
             const textInput = document.getElementById('msgInput');
@@ -759,12 +775,75 @@
                 sender: myName,
                 username: myUsername,
                 text: text,
+                type: 'text',
                 timestamp: Date.now()
             };
 
             db.ref('chats/' + currentChatId + '/messages').push(messageData);
             textInput.value = '';
         }
+
+        // РАБОТА С КРУЖКАМИ И ГОЛОСОВЫМИ СООБЩЕНИЯМИ
+        let mediaStream = null;
+        let mediaTimerInterval = null;
+        let secondsElapsed = 0;
+
+        document.getElementById('mediaBtn').addEventListener('click', async () => {
+            const modal = document.getElementById('mediaModal');
+            const videoElem = document.getElementById('mediaPreviewVideo');
+            const timerElem = document.getElementById('recordingTimer');
+            
+            modal.style.display = 'flex';
+            secondsElapsed = 0;
+            timerElem.textContent = "00:00";
+
+            try {
+                mediaStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+                videoElem.srcObject = mediaStream;
+                videoElem.style.display = 'block';
+            } catch (err) {
+                // Если нет камеры, разрешаем записать хотя бы голосовое
+                try {
+                    mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    videoElem.style.display = 'none';
+                } catch (e) {
+                    videoElem.style.display = 'none';
+                }
+            }
+
+            mediaTimerInterval = setInterval(() => {
+                secondsElapsed++;
+                let mins = Math.floor(secondsElapsed / 60).toString().padStart(2, '0');
+                let secs = (secondsElapsed % 60).toString().padStart(2, '0');
+                timerElem.textContent = `${mins}:${secs}`;
+            }, 1000);
+        });
+
+        document.getElementById('stopAndSendMediaBtn').onclick = function() {
+            clearInterval(mediaTimerInterval);
+            if (mediaStream) {
+                mediaStream.getTracks().forEach(track => track.stop());
+            }
+            document.getElementById('mediaModal').style.display = 'none';
+
+            // Имитация отправки кружка/голосового в чат
+            const messageData = {
+                sender: myName,
+                username: myUsername,
+                text: `🎤 Голосовое сообщение (${secondsElapsed} сек)`,
+                type: 'audio',
+                timestamp: Date.now()
+            };
+            db.ref('chats/' + currentChatId + '/messages').push(messageData);
+        };
+
+        document.getElementById('cancelMediaBtn').onclick = function() {
+            clearInterval(mediaTimerInterval);
+            if (mediaStream) {
+                mediaStream.getTracks().forEach(track => track.stop());
+            }
+            document.getElementById('mediaModal').style.display = 'none';
+        };
 
         function loadMessages() {
             const box = document.getElementById('chatMessages');
