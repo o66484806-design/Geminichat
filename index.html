@@ -322,8 +322,8 @@
         }
 
         .video-circle-box {
-            width: 220px;
-            height: 220px;
+            width: 200px;
+            height: 200px;
             border-radius: 50%;
             overflow: hidden;
             border: 3px solid #c084fc;
@@ -353,7 +353,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            width: 220px;
+            width: 200px;
             padding: 4px 12px;
             margin-top: 4px;
             font-size: 0.75rem;
@@ -554,6 +554,7 @@
             object-fit: cover;
             border: 4px solid #c084fc;
             box-shadow: 0 0 40px rgba(192, 132, 252, 0.6);
+            background: #000;
         }
     </style>
 </head>
@@ -635,13 +636,11 @@
             <div class="chat-messages" id="chatMessages"></div>
             
             <div class="chat-input-panel">
-                <!-- ОТДЕЛЬНАЯ КНОПКА СКРЕПКИ ДЛЯ ФАЙЛОВ -->
                 <label for="fileInput" class="input-icon-btn" title="Прикрепить файл" style="cursor: pointer;">📎</label>
                 <input type="file" id="fileInput" style="display: none;" multiple>
 
                 <input type="text" id="msgInput" placeholder="Сообщение" autocomplete="off">
                 
-                <!-- КНОПКА ВИДЕО-КРУЖКА (КАМЕРА) -->
                 <button class="input-icon-btn" id="videoBtn" title="Записать видео-кружок">📹</button>
                 <button class="input-icon-btn" id="voiceBtn" title="Записать голосовое сообщение">🎤</button>
                 <button class="purple-send-btn" id="sendMsgBtn" title="Отправить">➤</button>
@@ -684,7 +683,6 @@
             </div>
         </div>
 
-        <!-- МОДАЛКА ЗАПИСИ МЕДИА С КНОПКОЙ ПЕРЕКЛЮЧЕНИЯ КАМЕРЫ -->
         <div class="modal" id="mediaModal">
             <div class="modal-box">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -1020,7 +1018,6 @@
             textInput.value = '';
         }
 
-        // ОБРАБОТКА ОТПРАВКИ ФАЙЛОВ ЧЕРЕЗ СКРЕПКУ
         document.getElementById('fileInput').addEventListener('change', function(e) {
             const files = e.target.files;
             if (!files.length || !currentChatId) return;
@@ -1040,7 +1037,7 @@
             e.target.value = '';
         });
 
-        // ЗАПИСЬ ВИДЕО И ГОЛОСОВЫХ С ПЕРЕКЛЮЧЕНИЕМ КАМЕРЫ
+        // ЗАПИСЬ ВИДЕО И ГОЛОСОВЫХ С НАДЕЖНЫМ КОДИРОВАНИЕМ
         let mediaStream = null;
         let mediaRecorder = null;
         let audioChunks = [];
@@ -1048,7 +1045,6 @@
         let secondsElapsed = 0;
         let currentMediaType = 'voice';
         let currentFacingMode = 'user'; 
-        let hasMediaPermissionGranted = false;
 
         document.getElementById('voiceBtn').addEventListener('click', async () => {
             currentMediaType = 'voice';
@@ -1091,7 +1087,6 @@
                 };
 
                 mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
-                hasMediaPermissionGranted = true;
 
                 if (currentMediaType === 'video') {
                     videoElem.srcObject = mediaStream;
@@ -1126,8 +1121,6 @@
             } catch (err) {
                 alert('Ошибка доступа к микрофону или камере!');
                 modal.style.display = 'none';
-                hasMediaPermissionGranted = false;
-                return;
             }
         }
 
@@ -1139,15 +1132,21 @@
 
             mediaRecorder.onstop = () => {
                 const blob = new Blob(audioChunks, { type: currentMediaType === 'video' ? 'video/webm' : 'audio/webm' });
-                const objectUrl = URL.createObjectURL(blob);
+                
+                // Конвертируем в Base64, чтобы медиа гарантированно сохранялось и проигрывалось везде
+                const reader = new FileReader();
+                reader.readAsDataURL(blob);
+                reader.onloadend = function() {
+                    const base64data = reader.result;
 
-                db.ref('chats/' + currentChatId + '/messages').push({
-                    sender: myName,
-                    username: myUsername,
-                    mediaUrl: objectUrl,
-                    type: currentMediaType,
-                    timestamp: Date.now()
-                });
+                    db.ref('chats/' + currentChatId + '/messages').push({
+                        sender: myName,
+                        username: myUsername,
+                        mediaUrl: base64data,
+                        type: currentMediaType,
+                        timestamp: Date.now()
+                    });
+                };
 
                 if (mediaStream) {
                     mediaStream.getTracks().forEach(track => track.stop());
@@ -1209,7 +1208,7 @@
                         video.src = msg.mediaUrl;
                         video.playsInline = true;
                         video.muted = true;
-                        video.preload = "auto";
+                        video.preload = "metadata";
 
                         const overlay = document.createElement('div');
                         overlay.className = 'video-circle-overlay';
