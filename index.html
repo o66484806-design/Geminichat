@@ -429,21 +429,23 @@
             color: rgba(255, 255, 255, 0.85);
         }
 
+        /* ПАНЕЛЬ ВВОДА СТРОГО СФИКСИРОВАНА */
         .chat-input-panel {
-            padding: 10px 14px;
-            background: rgba(23, 3, 56, 0.95);
-            border-top: 1px solid rgba(168, 85, 247, 0.3);
+            padding: 8px 10px;
+            background: rgba(23, 3, 56, 0.98);
+            border-top: 1px solid rgba(168, 85, 247, 0.4);
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             flex-shrink: 0;
+            width: 100%;
         }
 
-        .chat-input-panel input {
+        .chat-input-panel input[type="text"] {
             flex: 1;
             min-width: 0;
-            padding: 12px 14px;
-            border-radius: 22px;
+            padding: 10px 12px;
+            border-radius: 20px;
             border: 1px solid rgba(168, 85, 247, 0.4);
             background: rgba(76, 29, 149, 0.25);
             color: #fff;
@@ -460,7 +462,7 @@
             border: none;
             color: #e879f9;
             cursor: pointer;
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             padding: 4px;
             display: flex;
             align-items: center;
@@ -468,20 +470,21 @@
             flex-shrink: 0;
         }
 
+        /* КНОПКА ОТПРАВКИ ТЕКСТА ЖЕСТКО ЗАФИКСИРОВАНА */
         .purple-send-btn {
             background: linear-gradient(135deg, #a855f7, #6b21a8);
             border: none;
             color: #fff;
-            width: 42px;
-            height: 42px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
             cursor: pointer;
             box-shadow: 0 4px 12px rgba(168, 85, 247, 0.5);
             font-size: 1.1rem;
-            flex-shrink: 0;
+            flex-shrink: 0 !important;
         }
 
         .action-btn {
