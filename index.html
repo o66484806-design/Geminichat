@@ -123,7 +123,7 @@
             margin-bottom: 16px;
         }
 
-        #authScreen input, .settings-card input, #searchInput, .chat-input-panel input, .modal-box input {
+        #authScreen input, .settings-card input, #searchInput, .modal-box input {
             width: 100%;
             padding: 14px 18px;
             border-radius: 14px;
@@ -133,11 +133,6 @@
             font-size: 1rem;
             outline: none;
             box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-        }
-
-        #authScreen input:focus, .settings-card input:focus, #searchInput:focus, .chat-input-panel input:focus {
-            border-color: #c084fc;
-            box-shadow: 0 0 18px rgba(192, 132, 252, 0.7);
         }
 
         #authScreen button, #saveProfileBtn, #switchAccountBtn, #registerBtn, .modal-box button {
@@ -174,10 +169,8 @@
             justify-content: space-between;
             align-items: center;
             cursor: pointer;
-            transition: background 0.2s;
         }
 
-        .account-card:hover { background: rgba(20, 30, 50, 0.9); }
         .account-info { text-align: left; }
         .account-info h4 { font-size: 0.9rem; color: #fff; }
         .account-info p { font-size: 0.75rem; color: #d1d5db; margin: 0; }
@@ -220,7 +213,6 @@
             gap: 4px;
             cursor: pointer;
             flex: 1;
-            transition: color 0.2s;
         }
 
         .nav-item.active {
@@ -249,11 +241,8 @@
             align-items: center;
             justify-content: space-between;
             cursor: pointer;
-            transition: background 0.2s;
             box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
-
-        .list-item:hover { background: rgba(20, 30, 50, 0.8); }
 
         .item-info h4 { font-size: 0.95rem; margin-bottom: 2px; color: #fff; }
         .item-info p { font-size: 0.8rem; color: #d1d5db; }
@@ -267,9 +256,10 @@
             -webkit-overflow-scrolling: touch;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 12px;
         }
 
+        /* Обычные сообщения */
         .msg-bubble {
             max-width: 75%;
             padding: 10px 14px;
@@ -294,17 +284,104 @@
             border-bottom-right-radius: 4px;
         }
 
+        /* Стили для TELEGRAM-like Кружков в чате */
+        .video-circle-msg {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid #c084fc;
+            box-shadow: 0 4px 20px rgba(168, 85, 247, 0.6);
+            background: #000;
+            position: relative;
+            align-self: flex-start;
+        }
+        .video-circle-msg.outgoing {
+            align-self: flex-end;
+            border-color: #e879f9;
+        }
+        .video-circle-msg video, .video-circle-msg img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Стили для TELEGRAM-like Голосовых в чате */
+        .voice-msg-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.25), rgba(124, 58, 237, 0.4));
+            border: 1px solid rgba(192, 132, 252, 0.5);
+            padding: 10px 16px;
+            border-radius: 20px;
+            max-width: 75%;
+            align-self: flex-start;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        .voice-msg-box.outgoing {
+            align-self: flex-end;
+            background: linear-gradient(135deg, #9333ea, #6b21a8);
+        }
+        .voice-wave {
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            color: #e9d5ff;
+        }
+
+        /* ЧАТ-ПАНЕЛЬ ВВОДА (С прозрачно-фиолетовыми элементами и фиолетовыми кнопками) */
         .chat-input-panel {
             padding: 10px 14px;
             background: rgba(8, 12, 24, 0.85);
             border-top: 1px solid rgba(168, 85, 247, 0.3);
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
             flex-shrink: 0;
         }
 
-        .chat-input-panel input { flex: 1; border-radius: 20px; padding: 10px 16px; }
+        /* Инпут: полупрозрачный фиолетовый с красивой надписью */
+        .chat-input-panel input {
+            flex: 1;
+            padding: 12px 18px;
+            border-radius: 22px;
+            border: 1px solid rgba(168, 85, 247, 0.5);
+            background: rgba(124, 58, 237, 0.15);
+            color: #fff;
+            font-size: 0.95rem;
+            outline: none;
+            box-shadow: inset 0 2px 6px rgba(0,0,0,0.3);
+        }
+        .chat-input-panel input::placeholder {
+            color: #d8b4fe;
+            opacity: 0.7;
+        }
+        .chat-input-panel input:focus {
+            border-color: #c084fc;
+            background: rgba(124, 58, 237, 0.25);
+            box-shadow: 0 0 15px rgba(192, 132, 252, 0.4);
+        }
+
+        /* Закрашенные фиолетовые кнопки (видео, микрофон, отправка) */
+        .purple-btn {
+            background: linear-gradient(135deg, #a855f7, #7c3aed);
+            border: none;
+            color: #fff;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(168, 85, 247, 0.5);
+            font-size: 1.1rem;
+            flex-shrink: 0;
+            transition: transform 0.1s, box-shadow 0.2s;
+        }
+        .purple-btn:active {
+            transform: scale(0.92);
+        }
 
         .action-btn {
             background: none;
@@ -434,11 +511,13 @@
                 <span></span>
             </div>
             <div class="chat-messages" id="chatMessages"></div>
+            
+            <!-- ПАНЕЛЬ ВВОДА СОГАСНО ТРЕБОВАНИЯМ -->
             <div class="chat-input-panel">
-                <button class="action-btn" id="voiceBtn" title="Записать голосовое сообщение">🎤</button>
-                <button class="action-btn" id="videoBtn" title="Записать видео-кружок">📹</button>
-                <input type="text" id="msgInput" placeholder="Сообщение..." autocomplete="off">
-                <button class="action-btn" id="sendMsgBtn" title="Отправить">➤</button>
+                <button class="purple-btn" id="videoBtn" title="Записать видео-кружок">📹</button>
+                <button class="purple-btn" id="voiceBtn" title="Записать голосовое сообщение">🎤</button>
+                <input type="text" id="msgInput" placeholder="Печатать…" autocomplete="off">
+                <button class="purple-btn" id="sendMsgBtn" title="Отправить">➤</button>
             </div>
         </div>
 
@@ -479,7 +558,7 @@
             </div>
         </div>
 
-        <!-- МОДАЛКА МЕДИА (С УВЕЛИЧЕННЫМ КРУЖКОМ 200x200px) -->
+        <!-- МОДАЛКА ЗАПИСИ -->
         <div class="modal" id="mediaModal">
             <div class="modal-box">
                 <h3 id="mediaModalTitle" style="color: #d8b4fe;">Запись</h3>
@@ -519,7 +598,6 @@
         let messageListener = null;
         let userChatsListener = null;
 
-        // Запрос разрешений на браузерные уведомления
         if (window.Notification && Notification.permission !== "granted") {
             Notification.requestPermission();
         }
@@ -804,7 +882,7 @@
             textInput.value = '';
         }
 
-        // ЛОГИКА ЗАПИСИ ГОЛОСОВЫХ И ВИДЕО-КРУЖКОВ
+        // ЗАПИСЬ МЕДИА (КРУЖКИ И ГОЛОСОВЫЕ)
         let mediaStream = null;
         let mediaTimerInterval = null;
         let secondsElapsed = 0;
@@ -818,7 +896,7 @@
 
         document.getElementById('videoBtn').addEventListener('click', async () => {
             currentMediaType = 'video';
-            document.getElementById('mediaModalTitle').textContent = 'Запись видео-кружка';
+            document.getElementById('mediaModalTitle').textContent = 'Видео-кружок';
             openMediaModal(true);
         });
 
@@ -842,7 +920,7 @@
                     videoElem.style.display = 'none';
                 }
             } catch (err) {
-                alert('Не удалось получить доступ к микрофону/камере!');
+                alert('Нет доступа к камере/микрофону!');
                 modal.style.display = 'none';
                 return;
             }
@@ -863,8 +941,8 @@
             document.getElementById('mediaModal').style.display = 'none';
 
             let msgText = currentMediaType === 'video' 
-                ? `📹 Видео-кружок (${secondsElapsed} сек)` 
-                : `🎤 Голосовое сообщение (${secondsElapsed} сек)`;
+                ? `📹 Кружок (${secondsElapsed} сек)` 
+                : `🎤 Голосовое (${secondsElapsed} сек)`;
 
             const messageData = {
                 sender: myName,
@@ -884,7 +962,7 @@
             document.getElementById('mediaModal').style.display = 'none';
         };
 
-        // ЗАГРУЗКА СООБЩЕНИЙ И УВЕДОМЛЕНИЯ
+        // ЗАГРУЗКА СООБЩЕНИЙ С TELEGRAM-ДИЗАЙНОМ ДЛЯ МЕДИА
         function loadMessages() {
             const box = document.getElementById('chatMessages');
             box.innerHTML = '';
@@ -910,7 +988,7 @@
 
                 if (!isFirstLoad && lastMsg && lastMsg.username !== myUsername) {
                     if (window.Notification && Notification.permission === "granted") {
-                        new Notification(`Новое сообщение от ${lastMsg.sender}`, {
+                        new Notification(`Сообщение от ${lastMsg.sender}`, {
                             body: lastMsg.text,
                             icon: 'https://cdn-icons-png.flaticon.com/512/733/733585.png'
                         });
@@ -918,15 +996,34 @@
                 }
 
                 messagesArray.forEach(msg => {
-                    const div = document.createElement('div');
-                    div.classList.add('msg-bubble');
-                    
-                    if (msg.username === myUsername) {
-                        div.classList.add('outgoing');
-                    }
+                    const isOutgoing = (msg.username === myUsername);
 
-                    div.innerHTML = `<div style="font-size: 0.75rem; color: #d8b4fe; font-weight: bold; margin-bottom: 2px;">${msg.sender}</div>${msg.text}`;
-                    box.appendChild(div);
+                    if (msg.type === 'video') {
+                        // Отрисовка кружка в телеграм-стиле
+                        const div = document.createElement('div');
+                        div.className = `video-circle-msg ${isOutgoing ? 'outgoing' : ''}`;
+                        div.innerHTML = `<div style="display:flex; justify-content:center; align-items:center; width:100%; height:100%; background:#2e1065; color:#d8b4fe; font-size:0.8rem; text-align:center; padding:10px;">${msg.text}</div>`;
+                        box.appendChild(div);
+                    } else if (msg.type === 'voice') {
+                        // Отрисовка голосового в фиолетовом телеграм-стиле
+                        const div = document.createElement('div');
+                        div.className = `voice-msg-box ${isOutgoing ? 'outgoing' : ''}`;
+                        div.innerHTML = `
+                            <span style="font-size: 1.3rem;">▶️</span>
+                            <div>
+                                <div style="font-size:0.7rem; color:#f3e8ff; font-weight:bold;">${msg.sender}</div>
+                                <div class="voice-wave">ılıll|lıllı. ${msg.text}</div>
+                            </div>
+                        `;
+                        box.appendChild(div);
+                    } else {
+                        // Обычное текстовое сообщение
+                        const div = document.createElement('div');
+                        div.classList.add('msg-bubble');
+                        if (isOutgoing) div.classList.add('outgoing');
+                        div.innerHTML = `<div style="font-size: 0.75rem; color: #d8b4fe; font-weight: bold; margin-bottom: 2px;">${msg.sender}</div>${msg.text}`;
+                        box.appendChild(div);
+                    }
                 });
 
                 box.scrollTop = box.scrollHeight;
