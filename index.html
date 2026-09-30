@@ -441,7 +441,8 @@
 
         .chat-input-panel input {
             flex: 1;
-            padding: 12px 18px;
+            min-width: 0;
+            padding: 12px 14px;
             border-radius: 22px;
             border: 1px solid rgba(168, 85, 247, 0.4);
             background: rgba(76, 29, 149, 0.25);
@@ -460,10 +461,11 @@
             color: #e879f9;
             cursor: pointer;
             font-size: 1.3rem;
-            padding: 6px;
+            padding: 4px;
             display: flex;
             align-items: center;
             justify-content: center;
+            flex-shrink: 0;
         }
 
         .purple-send-btn {
@@ -647,6 +649,7 @@
                 <!-- МИКРОФОН ДЛЯ ГОЛОСОВЫХ -->
                 <button class="input-icon-btn" id="voiceBtn" title="Записать голосовое сообщение">🎤</button>
                 
+                <!-- КНОПКА ОТПРАВКИ ТЕКСТА -->
                 <button class="purple-send-btn" id="sendMsgBtn" title="Отправить">➤</button>
             </div>
         </div>
@@ -1022,7 +1025,6 @@
             textInput.value = '';
         }
 
-        // ОБРАБОТКА ФАЙЛОВ С НАДЕЖНЫМ КОДИРОВАНИЕМ
         document.getElementById('fileInput').addEventListener('change', function(e) {
             const files = e.target.files;
             if (!files.length || !currentChatId) return;
@@ -1048,7 +1050,6 @@
             e.target.value = '';
         });
 
-        // ЗАПИСЬ ВИДЕО И ГОЛОСОВЫХ
         let mediaStream = null;
         let mediaRecorder = null;
         let audioChunks = [];
@@ -1328,7 +1329,6 @@
                             <div style="text-align: right; font-size: 0.7rem; color: #d8b4fe; margin-top: 4px;">${timeStr}</div>
                         `;
 
-                        // Функция безопасного конвертирования Base64 в Blob для обхода ограничений браузеров
                         function getBlobUrlFromBase64(base64Data) {
                             try {
                                 const arr = base64Data.split(',');
@@ -1342,17 +1342,15 @@
                                 const blob = new Blob([u8arr], { type: mime });
                                 return URL.createObjectURL(blob);
                             } catch (e) {
-                                return base64Data; // Фолбек на оригинальную строку, если что-то пойдет не так
+                                return base64Data;
                             }
                         }
 
-                        // Кнопка открытия файла в новой вкладке
                         div.querySelector('.file-action-open').onclick = () => {
                             const blobUrl = getBlobUrlFromBase64(msg.mediaUrl);
                             window.open(blobUrl, '_blank');
                         };
 
-                        // Кнопка скачивания файла
                         div.querySelector('.file-action-download').onclick = () => {
                             const blobUrl = getBlobUrlFromBase64(msg.mediaUrl);
                             const a = document.createElement('a');
