@@ -1022,7 +1022,7 @@
             textInput.value = '';
         }
 
-        // ОБРАБОТКА И ОТПРАВКА ФАЙЛОВ ЧЕРЕЗ СКРЕПКУ С ПОДДЕРЖКОЙ ОТКРЫТИЯ/СКАЧИВАНИЯ
+        // ОБРАБОТКА ФАЙЛОВ С НАДЕЖНЫМ КОДИРОВАНИЕМ
         document.getElementById('fileInput').addEventListener('change', function(e) {
             const files = e.target.files;
             if (!files.length || !currentChatId) return;
@@ -1048,7 +1048,7 @@
             e.target.value = '';
         });
 
-        // ЗАПИСЬ ВИДЕО И ГОЛОСОВЫХ С НАДЕЖНЫМ КОДИРОВАНИЕМ
+        // ЗАПИСЬ ВИДЕО И ГОЛОСОВЫХ
         let mediaStream = null;
         let mediaRecorder = null;
         let audioChunks = [];
@@ -1321,15 +1321,42 @@
                                     <div style="font-size: 0.75rem; color: #d8b4fe;">${fileSize}</div>
                                 </div>
                             </div>
-                            <div style="margin-top: 8px; display: flex; gap: 10px;">
-                                <button class="file-action-download" style="flex: 1; background: rgba(168,85,247,0.3); border: 1px solid #c084fc; color: #fff; padding: 6px; border-radius: 8px; cursor: pointer; font-size: 0.8rem;">Скачать</button>
+                            <div style="margin-top: 8px; display: flex; gap: 8px;">
+                                <button class="file-action-open" style="flex: 1; background: rgba(168,85,247,0.3); border: 1px solid #c084fc; color: #fff; padding: 6px; border-radius: 8px; cursor: pointer; font-size: 0.8rem;">Открыть</button>
+                                <button class="file-action-download" style="flex: 1; background: rgba(147,51,234,0.5); border: 1px solid #c084fc; color: #fff; padding: 6px; border-radius: 8px; cursor: pointer; font-size: 0.8rem;">Скачать</button>
                             </div>
                             <div style="text-align: right; font-size: 0.7rem; color: #d8b4fe; margin-top: 4px;">${timeStr}</div>
                         `;
 
+                        // Функция безопасного конвертирования Base64 в Blob для обхода ограничений браузеров
+                        function getBlobUrlFromBase64(base64Data) {
+                            try {
+                                const arr = base64Data.split(',');
+                                const mime = arr[0].match(/:(.*?);/)[1];
+                                const bstr = atob(arr[1]);
+                                let n = bstr.length;
+                                const u8arr = new Uint8Array(n);
+                                while (n--) {
+                                    u8arr[n] = bstr.charCodeAt(n);
+                                }
+                                const blob = new Blob([u8arr], { type: mime });
+                                return URL.createObjectURL(blob);
+                            } catch (e) {
+                                return base64Data; // Фолбек на оригинальную строку, если что-то пойдет не так
+                            }
+                        }
+
+                        // Кнопка открытия файла в новой вкладке
+                        div.querySelector('.file-action-open').onclick = () => {
+                            const blobUrl = getBlobUrlFromBase64(msg.mediaUrl);
+                            window.open(blobUrl, '_blank');
+                        };
+
+                        // Кнопка скачивания файла
                         div.querySelector('.file-action-download').onclick = () => {
+                            const blobUrl = getBlobUrlFromBase64(msg.mediaUrl);
                             const a = document.createElement('a');
-                            a.href = msg.mediaUrl;
+                            a.href = blobUrl;
                             a.download = fileName;
                             document.body.appendChild(a);
                             a.click();
