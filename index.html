@@ -435,7 +435,7 @@
             border-top: 1px solid rgba(168, 85, 247, 0.3);
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             flex-shrink: 0;
         }
 
@@ -635,11 +635,13 @@
             <div class="chat-messages" id="chatMessages"></div>
             
             <div class="chat-input-panel">
-                <!-- СКРЕПКА ДЛЯ ФАЙЛОВ -->
+                <!-- ОТДЕЛЬНАЯ КНОПКА СКРЕПКИ ДЛЯ ФАЙЛОВ -->
                 <label for="fileInput" class="input-icon-btn" title="Прикрепить файл" style="cursor: pointer;">📎</label>
                 <input type="file" id="fileInput" style="display: none;" multiple>
 
                 <input type="text" id="msgInput" placeholder="Сообщение" autocomplete="off">
+                
+                <!-- ВОЗВРАЩЕННАЯ КНОПКА ВИДЕО-КРУЖКА -->
                 <button class="input-icon-btn" id="videoBtn" title="Записать видео-кружок">📹</button>
                 <button class="input-icon-btn" id="voiceBtn" title="Записать голосовое сообщение">🎤</button>
                 <button class="purple-send-btn" id="sendMsgBtn" title="Отправить">➤</button>
@@ -1018,7 +1020,7 @@
             textInput.value = '';
         }
 
-        // ОБРАБОТКА ВЫБОРА ФАЙЛОВ ЧЕРЕЗ СКРЕПКУ
+        // ОБРАБОТКА ОТПРАВКИ ФАЙЛОВ ЧЕРЕЗ СКРЕПКУ
         document.getElementById('fileInput').addEventListener('change', function(e) {
             const files = e.target.files;
             if (!files.length || !currentChatId) return;
@@ -1035,10 +1037,10 @@
                     timestamp: Date.now()
                 });
             }
-            e.target.value = ''; // сброс input
+            e.target.value = '';
         });
 
-        // РАБОТА С МЕДИА И ПЕРЕКЛЮЧЕНИЕМ КАМЕРЫ
+        // ЗАПИСЬ ВИДЕО И ГОЛОСОВЫХ С ПЕРЕКЛЮЧЕНИЕМ КАМЕРЫ
         let mediaStream = null;
         let mediaRecorder = null;
         let audioChunks = [];
