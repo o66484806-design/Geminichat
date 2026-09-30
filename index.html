@@ -268,7 +268,7 @@
             border-bottom-right-radius: 4px;
         }
 
-        /* ТОЧНЫЙ СТИЛЬ TELEGRAM ДЛЯ ВИДЕО-КРУЖКА */
+        /* КРУГЛЫЙ ВИДЕО-КРУЖОК КАВЕР КАК НА СКРИНШОТЕ */
         .video-circle-wrapper {
             display: flex;
             flex-direction: column;
@@ -306,7 +306,6 @@
             align-items: center;
         }
 
-        /* Плашка снизу кружка (таймер слева, значок звука посередине, время и галочки справа) */
         .video-circle-footer {
             display: flex;
             align-items: center;
@@ -324,7 +323,7 @@
             gap: 4px;
         }
 
-        /* ТОЧНЫЙ СТИЛЬ TELEGRAM ДЛЯ ГОЛОСОВОГО СООБЩЕНИЯ */
+        /* КАПСУЛА ГОЛОСОВОГО СООБЩЕНИЯ */
         .voice-msg-capsule {
             display: flex;
             align-items: center;
@@ -384,7 +383,7 @@
             color: rgba(255, 255, 255, 0.85);
         }
 
-        /* ПАНЕЛЬ ВВОДА КАК НА СКРИНШОТЕ (СКРЕПКА СЛЕВА, МИКРОФОН СПРАВА) */
+        /* НИЖНЯЯ ПАНЕЛЬ ВВОДА КАК НА СКРИНШОТЕ */
         .chat-input-panel {
             padding: 10px 14px;
             background: rgba(23, 3, 56, 0.95);
@@ -410,7 +409,6 @@
             opacity: 0.7;
         }
 
-        /* Кнопка скрепки (прикрепление/видео-кружок) слева и микрофон (голосовое) справа */
         .input-icon-btn {
             background: none;
             border: none;
@@ -423,7 +421,6 @@
             justify-content: center;
         }
 
-        /* Полностью фиолетовая кнопка отправки */
         .purple-send-btn {
             background: linear-gradient(135deg, #a855f7, #6b21a8);
             border: none;
@@ -494,7 +491,7 @@
             box-shadow: 0 0 30px rgba(168, 85, 247, 0.3);
         }
 
-        /* Полноэкранный плеер кружка */
+        /* ПОЛНОЭКРАННЫЙ ПЛЕЕР ВИДЕО-КРУЖКА */
         #videoPlayerModal {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -591,7 +588,7 @@
             </div>
             <div class="chat-messages" id="chatMessages"></div>
             
-            <!-- ПАНЕЛЬ ВВОДА КАК НА СКРИНШОТЕ (Скрепка слева, Инпут, Микрофон справа) -->
+            <!-- ПАНЕЛЬ ВВОДА -->
             <div class="chat-input-panel">
                 <button class="input-icon-btn" id="videoBtn" title="Записать видео-кружок">📎</button>
                 <input type="text" id="msgInput" placeholder="Сообщение" autocomplete="off">
@@ -974,7 +971,16 @@
                     videoElem.style.display = 'none';
                 }
 
-                mediaRecorder = new MediaRecorder(mediaStream);
+                // Используем стабильный mimeType для совместимости
+                let options = { mimeType: currentMediaType === 'video' ? 'video/webm;codecs=vp8,opus' : 'audio/webm' };
+                if (!MediaRecorder.isTypeSupported(options.mimeType)) {
+                    options = { mimeType: currentMediaType === 'video' ? 'video/webm' : 'audio/ogg' };
+                    if (!MediaRecorder.isTypeSupported(options.mimeType)) {
+                        options = {};
+                    }
+                }
+
+                mediaRecorder = new MediaRecorder(mediaStream, options);
                 mediaRecorder.ondataavailable = (event) => {
                     if (event.data.size > 0) audioChunks.push(event.data);
                 };
@@ -1001,8 +1007,7 @@
             if (!mediaRecorder) return;
 
             mediaRecorder.onstop = () => {
-                const mimeType = currentMediaType === 'video' ? 'video/webm' : 'audio/webm';
-                const blob = new Blob(audioChunks, { type: mimeType });
+                const blob = new Blob(audioChunks, { type: currentMediaType === 'video' ? 'video/webm' : 'audio/webm' });
                 const reader = new FileReader();
 
                 reader.readAsDataURL(blob);
@@ -1034,7 +1039,7 @@
             document.getElementById('mediaModal').style.display = 'none';
         };
 
-        // ВОСПРОИЗВЕДЕНИЕ КАК НА СКРИНШОТЕ
+        // НАДЕЖНЫЙ ВОСПРОИЗВЕДЕНИЯ МЕДИА
         const videoPlayerModal = document.getElementById('videoPlayerModal');
         const fullscreenCircleVideo = document.getElementById('fullscreenCircleVideo');
         document.getElementById('closeVideoPlayerBtn').onclick = () => {
@@ -1069,7 +1074,7 @@
                     const timeStr = formatTime(msg.timestamp);
 
                     if (msg.type === 'video') {
-                        // Видео-кружок в точности как на скриншоте
+                        // Рендер видео-кружка
                         const wrapper = document.createElement('div');
                         wrapper.className = 'video-circle-wrapper';
 
@@ -1079,6 +1084,8 @@
                         const video = document.createElement('video');
                         video.src = msg.mediaUrl;
                         video.playsInline = true;
+                        video.muted = true;
+                        video.preload = "auto";
 
                         const overlay = document.createElement('div');
                         overlay.className = 'video-circle-overlay';
@@ -1090,7 +1097,7 @@
                         boxElem.onclick = () => {
                             fullscreenCircleVideo.src = msg.mediaUrl;
                             videoPlayerModal.style.display = 'flex';
-                            fullscreenCircleVideo.play();
+                            fullscreenCircleVideo.play().catch(e => console.log(e));
                         };
 
                         const footer = document.createElement('div');
@@ -1109,7 +1116,7 @@
                         box.appendChild(wrapper);
 
                     } else if (msg.type === 'voice') {
-                        // Голосовое сообщение (капсула как на скриншоте)
+                        // Рендер голосового сообщения с реальным аудиоэлементом
                         const capsule = document.createElement('div');
                         capsule.className = 'voice-msg-capsule';
 
@@ -1145,16 +1152,23 @@
                         capsule.appendChild(playBtn);
                         capsule.appendChild(infoCol);
 
+                        // Создаем объект аудио из base64
                         const audioElement = new Audio(msg.mediaUrl);
+                        
                         playBtn.onclick = () => {
                             if (audioElement.paused) {
-                                audioElement.play();
-                                playBtn.innerHTML = '⏸';
+                                audioElement.play().then(() => {
+                                    playBtn.innerHTML = '⏸';
+                                }).catch(err => {
+                                    alert('Не удалось воспроизвести аудио');
+                                    console.error(err);
+                                });
                             } else {
                                 audioElement.pause();
                                 playBtn.innerHTML = '▶';
                             }
                         };
+
                         audioElement.onended = () => {
                             playBtn.innerHTML = '▶';
                         };
