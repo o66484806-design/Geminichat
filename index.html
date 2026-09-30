@@ -724,7 +724,6 @@
         let currentChatId = null;
         let messageListener = null;
         let userChatsListener = null;
-        let globalChatsNotifRef = null;
 
         function cleanKey(str) {
             if (!str) return 'unknown';
@@ -747,7 +746,6 @@
             renderSavedAccounts();
         }
 
-        // Функция показа красивых всплывающих уведомлений (Toast) в приложении
         function showInAppNotification(senderName, textPreview) {
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
@@ -763,7 +761,6 @@
             setTimeout(() => toast.remove(), 3500);
         }
 
-        // Слушаем глобально новые сообщения по всем чатам пользователя для всплывающих уведомлений
         function initGlobalNotifications() {
             const userKey = cleanKey(myUsername);
             db.ref(`user_chats/${userKey}`).once('value', (snapshot) => {
@@ -771,12 +768,9 @@
                 if (!chats) return;
 
                 Object.keys(chats).forEach(chatId => {
-                    // Слушаем последние сообщения в каждом чате
                     db.ref(`chats/${chatId}/messages`).limitToLast(1).on('child_added', (msgSnap) => {
                         const msg = msgSnap.val();
-                        // Если сообщение не наше и отправлено только что (свежее)
                         if (msg && msg.username !== myUsername && (Date.now() - msg.timestamp < 10000)) {
-                            // Если мы сейчас не находимся в этом конкретном чате
                             if (currentChatId !== chatId) {
                                 let previewText = msg.text || (msg.type === 'video' ? '📹 Видео-кружок' : (msg.type === 'voice' ? '🎤 Голосовое сообщение' : 'Медиа файл'));
                                 showInAppNotification(msg.sender || 'Новое сообщение', previewText);
@@ -1019,7 +1013,7 @@
             textInput.value = '';
         }
 
-        // ЗАПИСЬ МЕДИА (КРУЖКИ И ГОЛОСОВЫЕ)
+        // ЗАПИСЬ МЕДИА ЧЕРЕЗ ОБЪЕКТНЫЕ ССЫЛКИ (URL.createObjectURL)
         let mediaStream = null;
         let mediaRecorder = null;
         let audioChunks = [];
@@ -1094,24 +1088,20 @@
 
             mediaRecorder.onstop = () => {
                 const blob = new Blob(audioChunks, { type: currentMediaType === 'video' ? 'video/webm' : 'audio/webm' });
-                const reader = new FileReader();
+                // Создаем мгновенную прямую объектную ссылку в памяти браузера
+                const objectUrl = URL.createObjectURL(blob);
 
-                reader.readAsDataURL(blob);
-                reader.onloadend = function() {
-                    const base64data = reader.result;
+                db.ref('chats/' + currentChatId + '/messages').push({
+                    sender: myName,
+                    username: myUsername,
+                    mediaUrl: objectUrl,
+                    type: currentMediaType,
+                    timestamp: Date.now()
+                });
 
-                    db.ref('chats/' + currentChatId + '/messages').push({
-                        sender: myName,
-                        username: myUsername,
-                        mediaUrl: base64data,
-                        type: currentMediaType,
-                        timestamp: Date.now()
-                    });
-
-                    if (mediaStream) {
-                        mediaStream.getTracks().forEach(track => track.stop());
-                    }
-                };
+                if (mediaStream) {
+                    mediaStream.getTracks().forEach(track => track.stop());
+                }
             };
 
             mediaRecorder.stop();
@@ -1137,7 +1127,6 @@
             return date.getHours().toString().padStart(2, '0') + ':' + date.getMinutes().toString().padStart(2, '0');
         }
 
-        // НАДЕЖНЫЙ РЕНДЕР И ВОСПРОИЗВЕДЕНИЕ СООБЩЕНИЙ ДЛЯ ВСЕХ УЧАСТНИКОВ
         function loadMessages() {
             const box = document.getElementById('chatMessages');
             box.innerHTML = '';
@@ -1160,7 +1149,6 @@
                     const timeStr = formatTime(msg.timestamp);
 
                     if (msg.type === 'video') {
-                        // Рендер видео-кружка (исходящий или входящий)
                         const wrapper = document.createElement('div');
                         wrapper.className = 'video-circle-wrapper ' + (isOutgoing ? 'outgoing' : 'incoming');
 
@@ -1201,7 +1189,6 @@
                         box.appendChild(wrapper);
 
                     } else if (msg.type === 'voice') {
-                        // Рендер голосового сообщения (исходящий или входящий)
                         const capsule = document.createElement('div');
                         capsule.className = 'voice-msg-capsule ' + (isOutgoing ? 'outgoing' : 'incoming');
 
@@ -1260,7 +1247,6 @@
                         box.appendChild(capsule);
 
                     } else {
-                        // Обычный текст
                         const div = document.createElement('div');
                         div.classList.add('msg-bubble');
                         if (isOutgoing) div.classList.add('outgoing');
@@ -1295,7 +1281,7 @@
             db.ref(`user_chats/${cleanKey(myUsername)}/${gId}`).set({ title: 'Группа: ' + gName, type: 'group', id: gId });
 
             groupModal.style.display = 'none';
-            document.getElementById('groupNameInput'].value = '';
+            document.getElementById('groupNameInput').value = '';
             
             currentChatId = gId;
             document.getElementById('activeChatTitle').textContent = '👥 ' + gName;
