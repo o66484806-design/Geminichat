@@ -652,7 +652,7 @@
             alert('Профиль сохранен!');
         });
 
-        // НАДЕЖНЫЙ ПОИСК
+        // НАДЕЖНЫЙ ПОИСК С ЗАЩИТОЙ ОТ UNDEFINED
         document.getElementById('searchInput').addEventListener('input', (e) => {
             const query = e.target.value.trim().toLowerCase();
             const resultsBox = document.getElementById('searchResults');
@@ -668,6 +668,7 @@
 
                     Object.values(users).forEach(user => {
                         if (!user.username || user.username === myUsername) return;
+                        
                         const matchName = user.name && user.name.toLowerCase().includes(query);
                         const matchUname = user.username && user.username.toLowerCase().includes(query);
                         const matchPhone = user.phone && user.phone.toLowerCase().includes(query);
@@ -676,7 +677,7 @@
                             found = true;
                             const div = document.createElement('div');
                             div.classList.add('list-item');
-                            div.innerHTML = `<div class="item-info"><h4>👤 ${user.name} (${user.phone || 'без номера'})</h4><p>${user.username}</p></div>`;
+                            div.innerHTML = `<div class="item-info"><h4>👤 ${user.name || 'Без имени'} (${user.phone || 'без номера'})</h4><p>${user.username}</p></div>`;
                             div.addEventListener('click', () => openPersonalChat(user));
                             resultsBox.appendChild(div);
                         }
@@ -702,6 +703,11 @@
         });
 
         function openPersonalChat(user) {
+            if (!user.username) {
+                alert('У этого пользователя не задан юзернейм, чат создать нельзя.');
+                return;
+            }
+
             const sorted = [myUsername, user.username].sort();
             currentChatId = 'chat_' + cleanKey(sorted[0]) + '_' + cleanKey(sorted[1]);
             
@@ -709,18 +715,18 @@
             const targetKey = cleanKey(user.username);
 
             db.ref(`user_chats/${myKey}/${currentChatId}`).set({
-                title: user.name,
+                title: user.name || 'Собеседник',
                 type: 'private',
                 id: currentChatId
             });
 
             db.ref(`user_chats/${targetKey}/${currentChatId}`).set({
-                title: myName,
+                title: myName || 'Собеседник',
                 type: 'private',
                 id: currentChatId
             });
 
-            document.getElementById('activeChatTitle').textContent = user.name;
+            document.getElementById('activeChatTitle').textContent = user.name || 'Чат';
             switchScreen('chatRoomScreen');
             loadMessages();
         }
